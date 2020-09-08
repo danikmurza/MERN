@@ -1,0 +1,6 @@
+{
+  "port": 5000,
+  "jwtSecret": "Danik",
+  "mongoUri": "mongodb+srv://mdanik:Agamyanrafael1@cluster0-kdnmn.mongodb.net/profile",
+  "baseUrl": "http://localhost:5000"
+}

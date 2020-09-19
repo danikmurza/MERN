@@ -29,6 +29,13 @@ export const sortProductPrice = () => {
     type: 'SORT_PRODUCTS_PRICE'
   }
 }
+export const productDescription = (product) => {
+  console.log(product)
+  return {
+    type: 'PRODUCT_DESCRIPTION',
+    payload: product
+  }
+}
 export const reverseProductPrice = () => {
   return {
     type: 'REVERSE_PRODUCTS_PRICE'
@@ -84,7 +91,7 @@ export const allProductsRemovedFromCart = (productId) => {
 export function fetchProducts() {
   return async dispatch => {
     dispatch(productsRequested())
-    await fetch('/api/books')
+    await fetch('http://localhost:5000/api/product')
       .then(res => res.json())
       .then(res => {
         if (res.error) {

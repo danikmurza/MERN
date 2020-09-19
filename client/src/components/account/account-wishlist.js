@@ -1,11 +1,16 @@
 import React from 'react'
 import avatar from "../css/img/shop/account/avatar.jpg"
-import cart3 from "../css/img/shop/cart/03.jpg"
-import cart4 from "../css/img/shop/cart/04.jpg"
 import {Link} from "react-router-dom";
 import {userAction} from "../../actions";
 
 export const AccountWishlist = () => {
+  let storageProducts = JSON.parse(localStorage.getItem('wishlist'));
+  const removeCart = (e) => {
+    e.preventDefault()
+    let products = storageProducts.filter(product => product._id !== e.currentTarget.value);
+    localStorage.setItem('wishlist', JSON.stringify(products))
+    window.location.reload()
+  }
   
   return (
     <div>
@@ -89,7 +94,8 @@ export const AccountWishlist = () => {
                   >
                     <i className="czi-heart opacity-60 mr-2"/>
                     Wishlist
-                    <span className="font-size-sm text-muted ml-auto">3</span>
+                    <span
+                      className="font-size-sm text-muted ml-auto">{storageProducts.length}</span>
                   </Link>
                 </li>
                 <li className="mb-0">
@@ -164,110 +170,56 @@ export const AccountWishlist = () => {
             </div>
             {/* Wishlist*/}
             {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={avatar} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">TH Jeans City Backpack</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Brand:</span>Tommy
-                    Hilfiger
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Khaki
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $79.<small>50</small>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-2 pl-sm-3 mx-auto mx-sm-0 text-center">
-                <button className="btn btn-outline-danger btn-sm" type="button">
-                  <i className="czi-trash mr-2"/>
-                  Remove
-                </button>
-              </div>
-            </div>
-            {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between my-4 pb-3 pb-sm-2 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart3} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">3-Color Sun Stash Hat</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Brand:</span>The North
-                    Face
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Pink / Beige
-                    /
-                    Dark blue
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $22.<small>50</small>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-2 pl-sm-3 mx-auto mx-sm-0 text-center">
-                <button className="btn btn-outline-danger btn-sm" type="button">
-                  <i className="czi-trash mr-2"/>
-                  Remove
-                </button>
-              </div>
-            </div>
-            {/* Item*/}
-            <div className="d-sm-flex justify-content-between mt-4">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart4} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">Cotton Polo Regular Fit</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Size:</span>42
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Light blue
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $9.<small>00</small>
-                  </div>
-                </div>
-              </div>
-              <div className="pt-2 pl-sm-3 mx-auto mx-sm-0 text-center">
-                <button className="btn btn-outline-danger btn-sm" type="button">
-                  <i className="czi-trash mr-2"/>
-                  Remove
-                </button>
-              </div>
-            </div>
+            <ul className="m-0 p-0" style={{listStyle: "none"}}>
+              {storageProducts
+                ? storageProducts.map((product, index) => {
+                  const {_id, name, price, img, brand} = product
+                  return (
+                    <li className="m-0 p-0" key={index}>
+                      <div
+                        className="d-sm-flex justify-content-between mt-lg-4 mb-4 pb-3 pb-sm-2 border-bottom">
+                        <div
+                          className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
+                          <a
+                            className="d-inline-block mx-auto mr-sm-4"
+                            href="/"
+                            style={{width: "10rem"}}
+                          >
+                            <img src={img} alt="Product"/>
+                          </a>
+                          <div className="media-body pt-2">
+                            <h3 className="product-title font-size-base mb-2">
+                              <a href="/">{name}</a>
+                            </h3>
+                            <div className="font-size-sm">
+                              <span
+                                className="text-muted mr-2">Brand:</span>{brand}
+                            </div>
+                            <div className="font-size-sm">
+                  
+                            </div>
+                            <div className="font-size-lg text-accent pt-2">
+                              ${price}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="pt-2 pl-sm-3 mx-auto mx-sm-0 text-center">
+                          <button className="btn btn-outline-danger btn-sm"
+                                  type="button"
+                                  value={_id}
+                                  onClick={removeCart}
+                          >
+                            <i className="czi-trash mr-2"/>
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  )
+                })
+                : null}
+            </ul>
           </section>
         </div>
       </div>

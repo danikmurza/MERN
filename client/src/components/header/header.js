@@ -8,11 +8,6 @@ import usaFlag from "../css/img/flags/en.png"
 import italiano from "../css/img/flags/it.png"
 import logoDark from "../css/img/logo-dark.png"
 
-import widget from "../css/img/shop/cart/widget/01.jpg"
-import widget2 from "../css/img/shop/cart/widget/02.jpg"
-import widget3 from "../css/img/shop/cart/widget/03.jpg"
-import widget4 from "../css/img/shop/cart/widget/04.jpg"
-
 import departments1 from "../css/img/shop/departments/01.jpg"
 import departments2 from "../css/img/shop/departments/02.jpg"
 import departments3 from "../css/img/shop/departments/03.jpg"
@@ -22,11 +17,18 @@ import departments6 from "../css/img/shop/departments/06.jpg"
 
 
 class Header extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      data: JSON.parse(localStorage.getItem('user')),
-      input: ''
+  state = {
+    data: JSON.parse(localStorage.getItem('user')),
+    cart: JSON.parse(localStorage.getItem('products')),
+    wishlist: JSON.parse(localStorage.getItem('wishlist')),
+    compare: JSON.parse(localStorage.getItem('compare')),
+    input: '',
+    remove: 0
+  }
+  
+  componentDidUpdate(prevProps) {
+    if (prevProps.loggingIn !== this.props.loggingIn) {
+      this.setState({remove: 1})
     }
   }
   
@@ -41,69 +43,44 @@ class Header extends Component {
     dispatch(filters.filterByValue(this.state.input))
   }
   
+  removeCart = (e) => {
+    let products = this.state.cart.filter(product => product._id !== e.currentTarget.value)
+    localStorage.setItem('products', JSON.stringify(products))
+    this.setState({cart: JSON.parse(localStorage.getItem('products'))})
+  }
+  
   render() {
-    const {data} = this.state;
+    let {data, cart, wishlist, compare} = this.state
+    let summa = 0
+    if (cart) {
+      let sum = []
+      cart.map((a) => sum.push(a.price))
+      summa = cart.map((a) => a.price * a.count)
+        .reduce((a, b) => a + b, 0)
+        .toFixed(2)
+    }
+    
+    
     return (
       <header className="box-shadow-sm">
         <div className="topbar topbar-dark bg-dark">
           <div className="container">
-            <div className="topbar-text dropdown d-md-none">
-              <a className="topbar-link dropdown-toggle"
-                 href="/"
-                 data-toggle="dropdown"
-              >
-                Useful links
-              </a>
-              <ul className="dropdown-menu">
-                <li>
-                  <a className="dropdown-item" href="tel:00331697720">
-                    <i className="czi-support text-muted mr-2"/>
-                    (00) 33 169 7720
-                  </a>
-                </li>
-                <li>
-                  <Link className="dropdown-item" to="order_tracking">
-                    <i className="czi-location text-muted mr-2"/>
-                    Order tracking
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div className="topbar-text text-nowrap d-none d-md-inline-block">
-              <i className="czi-support"/>
-              <span className="text-muted mr-1">Support</span>
-              <a className="topbar-link" href="tel:00331697720">
-                (00) 33 169 7720
-              </a>
-            </div>
-            <div className="cz-carousel cz-controls-static d-none d-md-block">
-              <div className="cz-carousel-inner"
-                   data-carousel-options='{"mode": "gallery", "nav": false}'>
-                <div className="topbar-text">Free shipping for order over $200
-                </div>
-                <div className="topbar-text">We return money within 30 days
-                </div>
-                <div className="topbar-text">Friendly 24/7 customer support
-                </div>
-              </div>
-            </div>
-            <div className="ml-3 text-nowrap">
-              <Link className="topbar-link mr-4 d-none d-md-inline-block"
-                    to="order_tracking">
-                <i className="czi-location"/>
-                Order tracking
-              </Link>
+            <div>
               <div className="topbar-text dropdown disable-autohide">
-                <Link className="topbar-link dropdown-toggle"
-                      to="/"
-                      data-toggle="dropdown">
-                  <img className="mr-2"
-                       width={20}
-                       src={usaFlag}
-                       alt="English"/>
+                <a
+                  className="topbar-link dropdown-toggle"
+                  href="#"
+                  data-toggle="dropdown"
+                >
+                  <img
+                    className="mr-2"
+                    width={20}
+                    src={usaFlag}
+                    alt="English"
+                  />
                   Eng / $
-                </Link>
-                <ul className="dropdown-menu dropdown-menu-right">
+                </a>
+                <ul className="dropdown-menu">
                   <li className="dropdown-item">
                     <select className="custom-select custom-select-sm">
                       <option value="usd">$ USD</option>
@@ -113,17 +90,18 @@ class Header extends Component {
                     </select>
                   </li>
                   <li>
-                    <Link className="dropdown-item pb-1" to="/">
-                      <img className="mr-2"
-                           width={20}
-                           src={france}
-                           alt="Français"
+                    <a className="dropdown-item pb-1" href="#">
+                      <img
+                        className="mr-2"
+                        width={20}
+                        src={france}
+                        alt="Français"
                       />
                       Français
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <a className="dropdown-item pb-1" href="/">
+                    <a className="dropdown-item pb-1" href="#">
                       <img
                         className="mr-2"
                         width={20}
@@ -134,7 +112,7 @@ class Header extends Component {
                     </a>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/">
+                    <a className="dropdown-item" href="#">
                       <img
                         className="mr-2"
                         width={20}
@@ -142,13 +120,74 @@ class Header extends Component {
                         alt="Italiano"
                       />
                       Italiano
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>
+              <div
+                className="topbar-text text-nowrap d-none d-md-inline-block border-left border-light pl-3 ml-3">
+                <span className="text-muted mr-1">Available 24/7 at</span>
+                <a className="topbar-link" href="tel:00331697720">
+                  (00) 33 169 7720
+                </a>
+              </div>
+            </div>
+            <div className="topbar-text dropdown d-md-none ml-auto">
+              <a
+                className="topbar-link dropdown-toggle"
+                href="#"
+                data-toggle="dropdown"
+              >
+                Wishlist / Compare / Track
+              </a>
+              <ul className="dropdown-menu dropdown-menu-right">
+                <li>
+                  <Link className="dropdown-item" to="/account_wishlist">
+                    <i className="czi-heart text-muted mr-2"/>
+                    Wishlist ({wishlist ? wishlist.length : "0"})
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/compare">
+                    <i className="czi-compare text-muted mr-2"/>
+                    Compare ({compare ? compare.length : "0"})
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item" to="/order_tracking">
+                    <i className="czi-location text-muted mr-2"/>
+                    Order tracking
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="d-none d-md-block ml-3 text-nowrap">
+              <Link
+                className="topbar-link d-none d-md-inline-block"
+                to="/account_wishlist"
+              >
+                <i className="czi-heart mt-n1"/>
+                Wishlist ({wishlist ? wishlist.length : "0"})
+              </Link>
+              <Link
+                className="topbar-link ml-3 pl-3 border-left border-light d-none d-md-inline-block"
+                to="/compare"
+              >
+                <i className="czi-compare mt-n1"/>
+                Compare ({compare ? compare.length : "0"})
+              </Link>
+              <Link
+                className="topbar-link ml-3 border-left border-light pl-3 d-none d-md-inline-block"
+                to="/order_tracking"
+              >
+                <i className="czi-location mt-n1"/>
+                Order tracking
+              </Link>
             </div>
           </div>
         </div>
+        ;
+        
         
         {/* Remove "navbar-sticky" class to make navigation bar scrollable with the page.*/}
         
@@ -190,13 +229,13 @@ class Header extends Component {
                     <i className="navbar-tool-icon czi-menu"/>
                   </div>
                 </a>
-                <a className="navbar-tool d-none d-lg-flex"
-                   href="/">
+                <Link className="navbar-tool d-none d-lg-flex"
+                      to="/account_wishlist">
                   <span className="navbar-tool-tooltip">Wishlist</span>
                   <div className="navbar-tool-icon-box">
                     <i className="navbar-tool-icon czi-heart"/>
                   </div>
-                </a>
+                </Link>
                 <Link className="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2"
                       to="/my_account"
                       data-toggle="modal">
@@ -211,11 +250,15 @@ class Header extends Component {
                   <Link
                     className="navbar-tool-icon-box bg-secondary dropdown-toggle"
                     to="/your_cart">
-                    <span className="navbar-tool-label">4</span>
+                    {cart
+                      ? <span className="navbar-tool-label">{cart.length}</span>
+                      : null
+                    }
                     <i className="navbar-tool-icon czi-cart"/>
                   </Link>
                   <Link className="navbar-tool-text" to="/your_cart">
-                    <small>My Cart</small>$265.00
+                    <small>My Cart</small>
+                    {cart ? `${summa}` : "0"}
                   </Link>
                   {/* Cart dropdown*/}
                   <div className="dropdown-menu dropdown-menu-right"
@@ -224,133 +267,61 @@ class Header extends Component {
                       <div style={{height: "15rem"}}
                            data-simplebar=""
                            data-simplebar-auto-hide="false">
-                        <div className="widget-cart-item pb-2 border-bottom">
-                          <button className="close text-danger"
-                                  type="button"
-                                  aria-label="Remove">
-                            <span aria-hidden="true">×</span>
-                          </button>
-                          <div className="media align-items-center">
-                            <a className="d-block mr-2" href="/">
-                              <img width={64}
-                                   src={widget}
-                                   alt="Product"/>
-                            </a>
-                            <div className="media-body">
-                              <h6 className="widget-product-title">
-                                <a href="/">
-                                  Women Colorblock Sneakers
-                                </a>
-                              </h6>
-                              <div className="widget-product-meta">
-                            <span className="text-accent mr-2">
-                              $150.<small>00</small>
-                            </span>
-                                <span className="text-muted">x 1</span>
-                              </div>
-                            </div>
+                        <ul style={{listStyle: "none"}} className="m-0 p-0">
+                          <div className="widget-cart-item pb-2 border-bottom">
+                            {cart
+                              ? cart.map((product, index) => {
+                                const {name, price, count, img} = product
+                                return (
+                                  <li style={{listStyle: "none"}} key={index}>
+                                    <div
+                                      className="widget-cart-item py-2 border-bottom">
+                                      <button
+                                        className="close text-danger"
+                                        type="button"
+                                        aria-label="Remove"
+                                        value={product._id}
+                                        onClick={this.removeCart}
+                                      >
+                                        <span aria-hidden="true">×</span>
+                                      </button>
+                                      <div className="media align-items-center">
+                                        <a className="d-block mr-2" href="/">
+                                          <img
+                                            width={64}
+                                            src={img}
+                                            alt="Product"
+                                          />
+                                        </a>
+                                        <div className="media-body">
+                                          <h6 className="widget-product-title">
+                                            <a href="/">
+                                              {name}
+                                            </a>
+                                          </h6>
+                                          <div className="widget-product-meta">
+                                          <span className="text-accent mr-2">
+                                          ${price}
+                                          </span>
+                                            <span
+                                              className="text-muted">x {count}</span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </li>
+                                )
+                              })
+                              : null}
                           </div>
-                        </div>
-                        <div className="widget-cart-item py-2 border-bottom">
-                          <button
-                            className="close text-danger"
-                            type="button"
-                            aria-label="Remove"
-                          >
-                            <span aria-hidden="true">×</span>
-                          </button>
-                          <div className="media align-items-center">
-                            <a className="d-block mr-2" href="/">
-                              <img
-                                width={64}
-                                src={widget2}
-                                alt="Product"
-                              />
-                            </a>
-                            <div className="media-body">
-                              <h6 className="widget-product-title">
-                                <a href="/">
-                                  TH Jeans City Backpack
-                                </a>
-                              </h6>
-                              <div className="widget-product-meta">
-                            <span className="text-accent mr-2">
-                              $79.<small>50</small>
-                            </span>
-                                <span className="text-muted">x 1</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="widget-cart-item py-2 border-bottom">
-                          <button
-                            className="close text-danger"
-                            type="button"
-                            aria-label="Remove"
-                          >
-                            <span aria-hidden="true">×</span>
-                          </button>
-                          <div className="media align-items-center">
-                            <a className="d-block mr-2" href="/">
-                              <img
-                                width={64}
-                                src={widget3}
-                                alt="Product"
-                              />
-                            </a>
-                            <div className="media-body">
-                              <h6 className="widget-product-title">
-                                <a href="/">
-                                  3-Color Sun Stash Hat
-                                </a>
-                              </h6>
-                              <div className="widget-product-meta">
-                            <span className="text-accent mr-2">
-                              $22.<small>50</small>
-                            </span>
-                                <span className="text-muted">x 1</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="widget-cart-item py-2 border-bottom">
-                          <button
-                            className="close text-danger"
-                            type="button"
-                            aria-label="Remove"
-                          >
-                            <span aria-hidden="true">×</span>
-                          </button>
-                          <div className="media align-items-center">
-                            <a className="d-block mr-2" href="/">
-                              <img
-                                width={64}
-                                src={widget4}
-                                alt="Product"
-                              />
-                            </a>
-                            <div className="media-body">
-                              <h6 className="widget-product-title">
-                                <a href="/">
-                                  Cotton Polo Regular Fit
-                                </a>
-                              </h6>
-                              <div className="widget-product-meta">
-                            <span className="text-accent mr-2">
-                              $9.<small>00</small>
-                            </span>
-                                <span className="text-muted">x 1</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                        </ul>
                       </div>
                       <div
                         className="d-flex flex-wrap justify-content-between align-items-center py-3">
                         <div className="font-size-sm mr-2 py-2">
                           <span className="text-muted">Subtotal:</span>
                           <span className="text-accent font-size-base ml-1">
-                        $265.<small>00</small>
+                        {cart ? `${summa}` : '0'}
                       </span>
                         </div>
                         <a className="btn btn-outline-secondary btn-sm"

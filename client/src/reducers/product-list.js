@@ -43,10 +43,10 @@ const updateProductList = (state, action) => {
       }
     case 'SORT_PRODUCTS_AZ':
       const sortProductsAZ = state.productList.products.sort((a, b) => {
-        if (a.title < b.title) {
+        if (a.name < b.name) {
           return (-1)
         }
-        if (a.title > b.title) {
+        if (a.name > b.name) {
           return (1)
         }
         return 0
@@ -58,10 +58,10 @@ const updateProductList = (state, action) => {
       }
     case 'REVERSE_PRODUCTS_ZA':
       const reversProductsZA = state.productList.products.sort((a, b) => {
-        if (a.title > b.title) {
+        if (a.name > b.name) {
           return (-1)
         }
-        if (a.title < b.title) {
+        if (a.name < b.name) {
           return (1)
         }
         return 0
@@ -85,6 +85,13 @@ const updateProductList = (state, action) => {
         products: [],
         loading: false,
         error: action.payload
+      }
+    case 'PRODUCT_DESCRIPTION':
+      const pro = state.productList.products.filter(product => product._id === action.payload)
+      return {
+        products: pro,
+        loading: false,
+        error: null,
       }
     default:
       return state.productList

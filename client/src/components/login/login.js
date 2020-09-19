@@ -23,10 +23,12 @@ class MyAccount extends React.Component {
     e.preventDefault()
     this.setState({firstName: e.target.value})
   }
+  
   lastName = (e) => {
     e.preventDefault()
     this.setState({lastName: e.target.value})
   }
+  
   phoneNumber = (e) => {
     e.preventDefault()
     this.setState({phoneNumber: e.target.value})
@@ -62,7 +64,8 @@ class MyAccount extends React.Component {
   onSubmits = (e) => {
     e.preventDefault()
     if (this.state.email && this.state.password) {
-      this.props.dispatch(userAction.register(this.state.email,
+      this.props.dispatch(userAction.register(
+        this.state.email,
         this.state.password,
         this.state.firstName,
         this.state.lastName,
@@ -80,7 +83,6 @@ class MyAccount extends React.Component {
   render() {
     const {show} = this.state
     return (
-      
       <div className="container py-4 py-lg-5 my-4">
         
         <Modal className="modal" show={show}>

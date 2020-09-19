@@ -7,11 +7,20 @@ const User = require('../models/User')
 const router = Router()
 
 
+router.delete('/user',
+  async (req, res) => {
+    const {_id} = req.body
+    try {
+      const user = await User.findByIdAndDelete(_id)
+      res.status(201).json({message: `${user} delete`})
+      
+      
+    } catch (e) {
+      console.log(e)
+    }
+  })
+
 router.get('/array',
-  // [
-  //   check('email', 'Please enter a valid email').normalizeEmail().isEmail(),
-  //   check('password', 'enter password').exists()
-  // ],
   async (req, res) => {
     try {
       const user = await User.find()

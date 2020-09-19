@@ -1,4 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
+import Rating from '@material-ui/lab/Rating'
+import Box from "@material-ui/core/Box"
 
 import gallery1 from '../css/img/shop/single/gallery/01.jpg'
 import gallery2 from '../css/img/shop/single/gallery/02.jpg'
@@ -7,19 +9,43 @@ import gallery4 from '../css/img/shop/single/gallery/04.jpg'
 import galleryth1 from '../css/img/shop/single/gallery/th01.jpg'
 import galleryth2 from '../css/img/shop/single/gallery/th02.jpg'
 import galleryth3 from '../css/img/shop/single/gallery/th03.jpg'
-import galleryth4 from '../css/img/shop/single/gallery/th04.jpg'
 import single1 from '../css/img/shop/single/color-opt-1.png'
 import single2 from '../css/img/shop/single/color-opt-2.png'
 import single3 from '../css/img/shop/single/color-opt-3.png'
 
 
-export const ModalProduct = () => {
-  const [mod, setMod] = useState('block')
+export const ModalProduct = ({show, closedModal, product}) => {
+  
+  const {name, brand, price, img, review} = product
+  
+  const addProduct = (e) => {
+    let products = [];
+    if (localStorage.getItem('products')) {
+      products = JSON.parse(localStorage.getItem('products'))
+    }
+    let pro = products.find(p => p._id === product._id)
+    if (pro) {
+      products.map(p => p._id === product._id ? p.count++ : p.count)
+    }
+    if (!pro) {
+      products.push({
+        _id: product._id,
+        name: name,
+        price: price,
+        img: img,
+        count: 1,
+        review: review,
+        brand: brand
+      })
+    }
+    localStorage.setItem('products', JSON.stringify(products));
+  }
+  
   return (
     <div className="modal-quick-view modal fade show"
          id="quick-view"
          tabIndex={-1}
-         style={{display: mod, paddingRight: 21}}
+         style={{display: show, paddingRight: 21}}
          aria-modal="true">
       <div className="modal-dialog modal-xl">
         <div className="modal-content">
@@ -31,7 +57,7 @@ export const ModalProduct = () => {
                  title='sport'
                  data-original-title="Go to product page"
               >
-                Sports Hooded Sweatshirt
+                {name}
                 <i className="czi-arrow-right font-size-lg ml-2"/>
               </a>
             </h4>
@@ -40,7 +66,7 @@ export const ModalProduct = () => {
               type="button"
               data-dismiss="modal"
               aria-label="Close"
-              onClick={() => setMod('none')}
+              onClick={closedModal}
             >
               <span aria-hidden="true">×</span>
             </button>
@@ -69,7 +95,7 @@ export const ModalProduct = () => {
                     </div>
                     <div className="cz-preview-item" id="third">
                       <img className="cz-image-zoom"
-                           src={gallery3}
+                           src={img}
                            data-zoom={gallery3}
                            alt="Product"
                       />
@@ -77,7 +103,7 @@ export const ModalProduct = () => {
                     </div>
                     <div className="cz-preview-item active" id="fourth">
                       <img className="cz-image-zoom"
-                           src={gallery4}
+                           src={img}
                            data-zoom={gallery4}
                            alt="Product"
                       />
@@ -101,7 +127,7 @@ export const ModalProduct = () => {
                       />
                     </a>
                     <a className="cz-thumblist-item active" href="/">
-                      <img src={galleryth4}
+                      <img src={img}
                            alt="Product thumb"
                       />
                     </a>
@@ -114,17 +140,28 @@ export const ModalProduct = () => {
                   <div
                     className="d-flex justify-content-between align-items-center mb-2">
                     <a href="/">
-                      <div className="star-rating">
-                        <i className="sr-star czi-star-filled active"/>
-                        <i className="sr-star czi-star-filled active"/>
-                        <i className="sr-star czi-star-filled active"/>
-                        <i className="sr-star czi-star-filled active"/>
-                        <i className="sr-star czi-star"/>
-                      </div>
-                      <span
-                        className="d-inline-block font-size-sm text-body align-middle mt-1 ml-1">
+                      {/*<div className="star-rating">*/}
+                      {/*  <i className="sr-star czi-star-filled active"/>*/}
+                      {/*  <i className="sr-star czi-star-filled active"/>*/}
+                      {/*  <i className="sr-star czi-star-filled active"/>*/}
+                      {/*  <i className="sr-star czi-star-filled active"/>*/}
+                      {/*  <i className="sr-star czi-star"/>*/}
+                      {/*</div>*/}
+                      {review[0].rating
+                        ? <Box component="fieldset" mb={3}
+                               borderColor="transparent">
+                          <Rating name="half-rating-read"
+                                  size="small"
+                                  defaultValue={review[0].rating}
+                                  precision={0.5} readOnly/>
+                          <span
+                            className="d-inline-block font-size-sm text-body align-middle  ml-3 mb-2">
                     74 Reviews
                   </span>
+                        </Box>
+                        : null
+                      }
+  
                     </a>
                     <button className="btn-wishlist"
                             type="button"
@@ -136,10 +173,10 @@ export const ModalProduct = () => {
                   </div>
                   <div className="mb-3">
                 <span className="h3 font-weight-normal text-accent mr-1">
-                  $18.<small>99</small>
+                  ${price}
                 </span>
                     <del className="text-muted font-size-lg mr-3">
-                      $25.<small>00</small>
+                      ${price}.<small>00</small>
                     </del>
                     <span
                       className="badge badge-danger badge-shadow align-middle mt-n2">
@@ -148,9 +185,9 @@ export const ModalProduct = () => {
                   </div>
                   <div className="font-size-sm mb-4">
                 <span className="text-heading font-weight-medium mr-1">
-                  Color:
+                  Brand:
                 </span>
-                    <span className="text-muted">Red/Dark blue/White</span>
+                    <span className="text-muted">{brand}</span>
                   </div>
                   <div className="position-relative mr-n4 mb-3">
                     <div
@@ -224,7 +261,7 @@ export const ModalProduct = () => {
                         Size:
                       </label>
                       <select className="custom-select" required
-                              id="product-size">
+                              id={product._id}>
                         <option value>Select size</option>
                         <option value="xs">XS</option>
                         <option value="s">S</option>
@@ -247,6 +284,7 @@ export const ModalProduct = () => {
                       <button
                         className="btn btn-primary btn-shadow btn-block"
                         type="submit"
+                        onClick={addProduct}
                       >
                         <i className="czi-cart font-size-lg mr-2"/>
                         Add to Cart
@@ -281,3 +319,5 @@ export const ModalProduct = () => {
     </div>
   )
 }
+
+

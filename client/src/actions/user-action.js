@@ -73,10 +73,23 @@ function getAll() {
   }
 }
 
+function deleteUser(_id) {
+  return dispatch => {
+    dispatch(request({_id}))
+    
+    userService.deleteUser(_id)
+      .then(
+        users => dispatch(success(users)),
+        error => dispatch(failure(error))
+      )
+  }
+}
+
 
 export const userAction = {
   login,
   logout,
   getAll,
-  register
+  register,
+  deleteUser
 }

@@ -67,19 +67,36 @@ function handleResponse(response) {
       if (response.status === 401) {
         // auto logout if 401 response returned from api
         logout()
-        
+  
       }
       const error = (data && data.message) || response.statusText
       return Promise.reject(error)
     }
-    
+  
     return data
   });
+  
+}
+
+
+async function deleteUser(_id) {
+  const requestOptions = {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({_id})
+  };
+  
+  return await fetch(`http://localhost:5000/api/auth/user`, requestOptions)
+    .then(handleResponse)
+    .then(user => {
+      return user
+    })
 }
 
 export const userService = {
   login,
   logout,
   getAll,
-  register
+  register,
+  deleteUser
 }

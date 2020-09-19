@@ -13,8 +13,8 @@ app.use(express.static(path.join(__dirname, 'client')))
 app.use(express.urlencoded({extended: true}))
 
 app.use('/home', require('./routes/home'))
-app.use('/api/books', require('./routes/books'))
 app.use('/api/auth', require('./routes/auth'))
+app.use('/api/product', require('./routes/products'))
 
 const PORT = config.get('port') || 5000
 
@@ -23,7 +23,8 @@ async function start() {
     await mongoose.connect(config.get('mongoUri'), {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useFindAndModify: false
     })
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}    -----------------------------------------------------------   ok`)

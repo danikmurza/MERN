@@ -1,12 +1,15 @@
 import React from 'react'
-import cart1 from '../css/img/shop/cart/01.jpg'
-import cart2 from '../css/img/shop/cart/02.jpg'
-import cart3 from '../css/img/shop/cart/03.jpg'
-import cart4 from '../css/img/shop/cart/04.jpg'
-import {Link} from "react-router-dom";
+import {Link} from "react-router-dom"
 
 
 export const Review = () => {
+  const cart = JSON.parse(localStorage.getItem('products'))
+  let summa = 0
+  if (cart) {
+    let sum = []
+    cart.map((a) => sum.push(a.price))
+    summa = sum.reduce((a, b) => a + b, 0).toFixed(2)
+  }
   return (
     <div>
       {/* Page Title*/}
@@ -96,174 +99,62 @@ export const Review = () => {
             <h2 className="h6 pt-1 pb-3 mb-3 border-bottom">Review your
               order</h2>
             {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart1} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">Women Colorblock Sneakers</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Size:</span>8.5
-                  </div>
-                  <div className="font-size-sm">
-                    <span
-                      className="text-muted mr-2">Color:</span>White &amp; Blue
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $154.<small>00</small>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-right"
-                style={{maxWidth: "9rem"}}
-              >
-                <p className="mb-0">
-                  <span className="text-muted font-size-sm">Quantity:</span>
-                  <span>&nbsp;1</span>
-                </p>
-                <button className="btn btn-link px-0" type="button">
-                  <i className="czi-edit mr-2"/>
-                  <span className="font-size-sm">Edit</span>
-                </button>
-              </div>
-            </div>
-            {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart2} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">TH Jeans City Backpack</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Brand:</span>Tommy
-                    Hilfiger
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Khaki
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $79.<small>50</small>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-right"
-                style={{maxWidth: "9rem"}}
-              >
-                <p className="mb-0">
-                  <span className="text-muted font-size-sm">Quantity:</span>
-                  <span>&nbsp;1</span>
-                </p>
-                <button className="btn btn-link px-0" type="button">
-                  <i className="czi-edit mr-2"/>
-                  <span className="font-size-sm">Edit</span>
-                </button>
-              </div>
-            </div>
-            {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart3} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">3-Color Sun Stash Hat</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Brand:</span>The North
-                    Face
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Pink / Beige
-                    /
-                    Dark blue
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $22.<small>50</small>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-right"
-                style={{maxWidth: "9rem"}}
-              >
-                <p className="mb-0">
-                  <span className="text-muted font-size-sm">Quantity:</span>
-                  <span>&nbsp;1</span>
-                </p>
-                <button className="btn btn-link px-0" type="button">
-                  <i className="czi-edit mr-2"/>
-                  <span className="font-size-sm">Edit</span>
-                </button>
-              </div>
-            </div>
-            {/* Item*/}
-            <div
-              className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
-              <div
-                className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
-                <a
-                  className="d-inline-block mx-auto mr-sm-4"
-                  href="/"
-                  style={{width: "10rem"}}
-                >
-                  <img src={cart4} alt="Product"/>
-                </a>
-                <div className="media-body pt-2">
-                  <h3 className="product-title font-size-base mb-2">
-                    <a href="/">Cotton Polo Regular Fit</a>
-                  </h3>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Size:</span>42
-                  </div>
-                  <div className="font-size-sm">
-                    <span className="text-muted mr-2">Color:</span>Light blue
-                  </div>
-                  <div className="font-size-lg text-accent pt-2">
-                    $9.<small>00</small>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-right"
-                style={{maxWidth: "9rem"}}
-              >
-                <p className="mb-0">
-                  <span className="text-muted font-size-sm">Quantity:</span>
-                  <span>&nbsp;1</span>
-                </p>
-                <button className="btn btn-link px-0" type="button">
-                  <i className="czi-edit mr-2"/>
-                  <span className="font-size-sm">Edit</span>
-                </button>
-              </div>
-            </div>
+            <ul className="m-0 p-0" style={{listStyle: "none"}}>
+              {cart
+                ? cart.map((product, index) => {
+                  const {name, price, count, img, brand} = product
+                  console.log(img)
+                  return (<li className="m-0 p-0" key={index}>
+            
+                      <div
+                        className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
+                        <div
+                          className="media media-ie-fix d-block d-sm-flex text-center text-sm-left">
+                          <a
+                            className="d-inline-block mx-auto mr-sm-4"
+                            href="/"
+                            style={{width: "10rem"}}
+                          >
+                            <img src={img} alt="Product"/>
+                          </a>
+                          <div className="media-body pt-2">
+                            <h3 className="product-title font-size-base mb-2">
+                              <a href="/">{name}</a>
+                            </h3>
+                            <div className="font-size-sm">
+                              <span
+                                className="text-muted mr-2">Brand:</span>{brand}
+                            </div>
+                            {/*        <div className="font-size-sm">*/}
+                            {/*<span*/}
+                            {/*  className="text-muted mr-2">Color:</span>White &amp; Blue*/}
+                            {/*        </div>*/}
+                            <div className="font-size-lg text-accent pt-2">
+                              ${price}
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="pt-2 pt-sm-0 pl-sm-3 mx-auto mx-sm-0 text-center text-sm-right"
+                          style={{maxWidth: "9rem"}}
+                        >
+                          <p className="mb-0">
+                            <span
+                              className="text-muted font-size-sm">Quantity:</span>
+                            <span>&nbsp;{count}</span>
+                          </p>
+                          <button className="btn btn-link px-0" type="button">
+                            <i className="czi-edit mr-2"/>
+                            <span className="font-size-sm">Edit</span>
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  )
+                })
+                : null}
+            </ul>
+  
             {/* Client details*/}
             <div className="bg-secondary rounded-lg px-4 pt-4 pb-2">
               <div className="row">
@@ -331,7 +222,7 @@ export const Review = () => {
                   className="d-flex justify-content-between align-items-center">
                   <span className="mr-2">Subtotal:</span>
                   <span className="text-right">
-                $265.<small>00</small>
+                ${summa}
               </span>
                 </li>
                 <li
@@ -353,7 +244,7 @@ export const Review = () => {
                 </li>
               </ul>
               <h3 className="font-weight-normal text-center my-4">
-                $274.<small>50</small>
+                ${summa}
               </h3>
               <form className="needs-validation" method="post" noValidate>
                 <div className="form-group">

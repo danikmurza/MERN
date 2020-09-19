@@ -2,9 +2,6 @@ import React from 'react'
 import comparison1 from '../css/img/shop/comparison/01.jpg'
 import comparison2 from '../css/img/shop/comparison/02.jpg'
 import comparison3 from '../css/img/shop/comparison/03.jpg'
-// import comparison4 from '../css/img/shop/comparison/04.jpg'
-// import comparison5 from '../css/img/shop/comparison/01.jpg'
-// import comparison6 from '../css/img/shop/comparison/01.jpg'
 
 
 export const Comparison = () => {
@@ -43,8 +40,7 @@ export const Comparison = () => {
         <div className="table-responsive">
           <table
             className="table table-bordered table-fixed font-size-sm"
-            style={{minWidth: "45rem"}}
-          >
+            style={{minWidth: "45rem"}}>
             <thead>
             <tr>
               <td className="align-middle">

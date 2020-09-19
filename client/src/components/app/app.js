@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {Route, Switch} from 'react-router-dom'
 import {Redirect} from "react-router-dom"
-import NewsPage from "../news/news-page"
+import NewsPage from "../add-products/add-product"
 import Products from '../products/products'
 import Header from '../header/header'
 import {Footer} from "../footer/footer"
@@ -9,7 +9,7 @@ import MyAccount from "../login/login"
 import {RecoveryPassword} from '../login/recovery-password'
 import {OrderTracking} from "../order-tracking/order-tracking"
 import {YourCart} from "../shopping-cart-table/your-cart"
-import HomePage from "../home/home"
+// import HomePage from "../home/home"
 import {Categories} from "../categories/categories"
 import {Review} from "../shopping-cart-table/review"
 import {Complete} from "../shopping-cart-table/complete"
@@ -30,23 +30,25 @@ import {YourDetails} from "../shopping-cart-table/your-details"
 import {Shipping} from "../shopping-cart-table/shipping"
 import {Payments} from "../shopping-cart-table/payment"
 import {AccountOrders} from "../account/account-orders"
-import ProductsList from "../products/index"
+import AllUser from "../admin/admin-page";
+import ProductDescription from "../products/product-description";
 
 
 const Navigation = () => {
-  const data = JSON.parse(localStorage.getItem('user'))
-  if (data) {
+  const user = JSON.parse(localStorage.getItem('user'))
+  useEffect(() => {
+  
+  }, [user])
+  if (user) {
     return (
       <div>
         <Header/>
         <Switch>
           {/*<Route path="/" component={HomePage} exact/>*/}
           <Route path="/store" component={Products}/>
-          <Route path="/store_list" component={ProductsList}/>
           <Route path="/my_account" component={MyAccount}/>
-          <Route path="/products_list" component={ProductsList}/>
           <Route path="/categories" component={Categories}/>
-          <Route path="/comparison" component={Comparison}/>
+          <Route path="/compare" component={Comparison}/>
           <Route path="/error404" component={Error404}/>
           <Route path="/about_page" component={AboutPage}/>
           <Route path="/account_orders" component={AccountOrders}/>
@@ -69,23 +71,27 @@ const Navigation = () => {
           <Route path="/payments" component={Payments}/>
           <Route path="/review" component={Review}/>
           <Route path="/complete" component={Complete}/>
-          <Route path="/news_page" component={NewsPage}/>
+          <Route path="/add" component={NewsPage}/>
+          <Route path="/all_user" component={AllUser}/>
+          <Route path="/pd" component={ProductDescription}/>
           <Redirect to="/store" from="/*"/>
         </Switch>
         <Footer/>
       </div>
     )
-  } else if (!data) {
+  } else if (!user) {
+    useEffect(() => {
+    
+    }, [user])
     return (
       <div>
         <Header/>
         <Switch>
           {/*<Route path="/" component={HomePage} exact/>*/}
           <Route path="/store" component={Products}/>
-          <Route path="/store_list" component={ProductsList}/>
           <Route path="/my_account" component={MyAccount}/>
           <Route path="/categories" component={Categories}/>
-          <Route path="/comparison" component={Comparison}/>
+          <Route path="/compare" component={Comparison}/>
           <Route path="/error404" component={Error404}/>
           <Route path="/about_page" component={AboutPage}/>
           <Route path="/contacts" component={Contacts}/>
@@ -98,7 +104,8 @@ const Navigation = () => {
           <Route path="/payments" component={Payments}/>
           <Route path="/review" component={Review}/>
           <Route path="/complete" component={Complete}/>
-          <Route path="/news_page" component={NewsPage}/>
+          <Route path="/pd" component={ProductDescription}/>
+          <Route path="/add" component={NewsPage}/>
           <Redirect to="/store" from="/*"/>
         </Switch>
         <Footer/>
@@ -108,6 +115,9 @@ const Navigation = () => {
 }
 
 export const App = () => {
+  // useEffect(() => {
+  //
+  // }, [user] )
   return (
     <div>
       <Navigation/>

@@ -1,5 +1,6 @@
+
 const {Router} = require('express')
-const Product = require('../models/products')
+const Product = require('../models/Products')
 const router = Router()
 
 router.get('/', async (req, res) => {
@@ -7,12 +8,14 @@ router.get('/', async (req, res) => {
     const product = await Product.find()
     res.send(product)
   } catch (e) {
-    res.status(500).json({message: 'Something went wrong, try again'})
+    res.status(500).json({message: `Something went wrong, try again  ${e}`})
   }
 })
+
 router.post('/add',
   async (req, res) => {
     const {name, brand, specification, price, count, img, type} = req.body
+    console.log(req.body)
     try {
       
       const product = new Product({
@@ -27,6 +30,7 @@ router.post('/add',
       res.status(500).json({message: 'Something went wrong, try again'})
     }
   })
+
 router.post('/review',
   async (req, res) => {
     const {_id, review} = req.body
@@ -46,6 +50,7 @@ router.post('/find', async (req, res) => {
     res.status(500).json({message: 'Something went wrong, try again'})
   }
 })
+
 router.post('/edit', async (req, res) => {
   const {_id} = req.body
   try {

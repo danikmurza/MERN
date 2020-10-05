@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {processorAction} from '../../actions/index'
+import {productAddAction} from '../../actions'
 import Spinner from "../spinner";
 import ErrorIndicator from "../error-indicator";
 
@@ -17,57 +17,31 @@ class AddProduct extends Component {
     type: ""
   }
   
-  
   componentDidMount() {
-    this.props.dispatch(processorAction.getAll())
+    this.props.dispatch(productAddAction.getAll())
     
-  }
-  
-  handleChange = (e) => {
-    e.preventDefault()
-    this.setState({type: e.target.value})
-  }
-  brand = (e) => {
-    e.preventDefault()
-    this.setState({brand: e.target.value})
-  }
-  count = (e) => {
-    e.preventDefault()
-    this.setState({count: e.target.value})
-  }
-  img = (e) => {
-    e.preventDefault()
-    this.setState({img: e.target.value})
-  }
-  name = (e) => {
-    e.preventDefault()
-    this.setState({name: e.target.value})
-  }
-  price = (e) => {
-    e.preventDefault()
-    this.setState({price: e.target.value})
-  }
-  specification = (e) => {
-    e.preventDefault()
-    this.setState({specification: e.target.value})
   }
   
   onSubmits = (e) => {
     const {name, brand, specification, price, count, img, type} = this.state
     e.preventDefault()
-    this.props.dispatch(processorAction.processorAdd(
+    this.props.dispatch(productAddAction.productAdd(
       name, brand, specification, price, count, img, type
     ))
+    this.setState({
+      name: '',
+      brand: '',
+      specification: '',
+      price: 0,
+      count: 0,
+      img: '',
+      type: ''
+    })
   }
   
   render() {
     
     const {products, pending, error} = this.props
-    // const {books, user, processor} = products
-    // if (books && processor){
-    // const ara = [...books, ...processor, ...user]
-    // console.log(ara)
-    // }
     
     if (pending) {
       return <Spinner/>
@@ -76,22 +50,25 @@ class AddProduct extends Component {
     if (error) {
       return <ErrorIndicator/>
     }
-    // console.log(products)
+  
     if (products.message) {
       console.log(products.message)
     }
-    // console.log(this.state.type)
-    // const {brand, name, specification, count, img, price} = products[0]
     return (
       <div className="container pb-4">
         <div className="form-group">
           <label htmlFor="text-input">TYPE PRODUCT</label>
-          <select value={this.state.type} onChange={this.handleChange}>
+          <select value={this.state.type}
+                  onChange={(e) => this.setState({type: e.target.value})}
+          >
             <option value="">Выбери продукт</option>
             <option value="processor">Processor</option>
             <option value="motherboard">Motherboard</option>
             <option value="memory">Memory</option>
             <option value="video-card">Video Card</option>
+            <option value="ssd">SSD</option>
+            <option value="cooling">Cooling</option>
+            <option value="SoundCard">Sound Card</option>
           </select>
         </div>
         <div className="form-group">
@@ -100,8 +77,8 @@ class AddProduct extends Component {
             className="form-control"
             type="text"
             id="name"
-            onChange={this.name}
-            // defaultValue={name}
+            onChange={(e) => this.setState({name: e.target.value})}
+            value={this.state.name}
           />
         </div>
         <div className="form-group">
@@ -110,8 +87,8 @@ class AddProduct extends Component {
             className="form-control"
             type="text"
             id="brand"
-            onChange={this.brand}
-            // defaultValue={brand}
+            onChange={(e) => this.setState({brand: e.target.value})}
+            value={this.state.brand}
           />
         </div>
         <div className="form-group">
@@ -120,8 +97,8 @@ class AddProduct extends Component {
             className="form-control"
             type="number"
             id="count"
-            onChange={this.count}
-            // defaultValue={count}
+            onChange={(e) => this.setState({count: e.target.value})}
+            value={this.state.count}
           />
         </div>
         <div className="form-group">
@@ -130,8 +107,8 @@ class AddProduct extends Component {
             className="form-control"
             type="number"
             id="price"
-            onChange={this.price}
-            // defaultValue={price}
+            onChange={(e) => this.setState({price: e.target.value})}
+            value={this.state.price}
           />
         </div>
         <div className="form-group">
@@ -140,8 +117,8 @@ class AddProduct extends Component {
             className="form-control"
             type="text"
             id="link"
-            onChange={this.img}
-            // defaultValue={img}
+            onChange={(e) => this.setState({img: e.target.value})}
+            value={this.state.img}
           />
         </div>
         <div className="form-group">
@@ -150,8 +127,8 @@ class AddProduct extends Component {
             className="form-control"
             type="text"
             id="specification"
-            onChange={this.specification}
-            // defaultValue={specification}
+            onChange={(e) => this.setState({specification: e.target.value})}
+            value={this.state.specification}
           />
         </div>
         <div className="text-right">
@@ -167,7 +144,7 @@ class AddProduct extends Component {
 }
 
 
-const mapStateToProps = ({newsList: {products, pending, error}}) => {
+const mapStateToProps = ({productList: {products, pending, error}}) => {
   return {products, pending, error}
 }
 

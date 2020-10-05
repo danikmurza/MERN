@@ -5,14 +5,22 @@ const user = new Schema({
   password: {type: String, required: true},
   firstName: {type: String},
   lastName: {type: String},
-  phoneNumber: {type: Number},
+  phoneNumber: {type: String},
   date: {type: Date, default: Date.now},
+  img: {type: String},
+  jwtQuestion: {type: String, required: false},
+  jwtSecret: {type: String, required: false},
   address: [{
-    primary: Boolean,
-    street: String,
-    city: String,
+    firstName: {type: String},
+    lastName: {type: String},
+    company: {type: String},
     country: String,
-    postalCode: Number
+    city: String,
+    line1: String,
+    line2: String,
+    primary: Boolean,
+    postalCode: Number,
+    
   }],
   creditCard: [{
     numberCard: Number,
@@ -20,14 +28,9 @@ const user = new Schema({
     expiration: Date,
     cvt: Number
   }],
-  ticket: [{
-    ticketName: String,
-    ticketData: Date,
-    ticketUpdate: Date,
-    type: String,
-    priority: String,
-    status: Boolean
-  }]
+  ticket: [],
+  orders: [],
+  avatarUrl: String
 })
 
 module.exports = model('User', user)

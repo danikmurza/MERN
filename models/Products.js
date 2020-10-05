@@ -17,7 +17,10 @@ const product = new Schema({
     author: {type: String, required: false},
     date: {type: Date, default: Date.now},
     rating: {type: Number, required: false},
-    review: {type: String, required: false}
+    description: {type: String, required: false},
+    email: {type: String, required: false},
+    pros: {type: String, required: false},
+    cons: {type: String, required: false}
   }],
   price: {
     type: Number,

@@ -31,8 +31,7 @@ export class ProductList extends Component {
     } = this.props
     
     const {list, buttonGrid, buttonList} = this.state
-    
-    
+
     return (
       <div>
         <div className="page-title-overlap bg-dark pt-4">
@@ -1262,214 +1261,7 @@ export class ProductList extends Component {
                         </div>
                         <span className="font-size-xs text-muted">46</span>
                       </li>
-                    
                     </ul>
-                  </div>
-                  {/* Filter by Color*/}
-                  <div className="widget">
-                    <h3 className="widget-title">Color</h3>
-                    <div className="d-flex flex-wrap">
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-blue-gray"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-blue-gray"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#b3c8db"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-blue-gray"
-                        >
-                          Blue-gray
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-burgundy"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-burgundy"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#ca7295"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-burgundy"
-                        >
-                          Burgundy
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-teal"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-teal"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#91c2c3"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-teal"
-                        >
-                          Teal
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-brown"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-brown"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#9a8480"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-brown"
-                        >
-                          Brown
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-coral-red"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-coral-red"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#ff7072"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-coral-red"
-                        >
-                          Coral red
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-navy"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-navy"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#696dc8"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-navy"
-                        >
-                          Navy
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-charcoal"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-charcoal"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#4e4d4d"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-charcoal"
-                        >
-                          Charcoal
-                        </label>
-                      </div>
-                      <div
-                        className="custom-control custom-option text-center mb-2 mx-1"
-                        style={{width: "4rem"}}
-                      >
-                        <input
-                          className="custom-control-input"
-                          type="checkbox"
-                          id="color-sky-blue"
-                        />
-                        <label
-                          className="custom-option-label rounded-circle"
-                          htmlFor="color-sky-blue"
-                        >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{backgroundColor: "#8bcdf5"}}
-                    />
-                        </label>
-                        <label
-                          className="d-block font-size-xs text-muted mt-n1"
-                          htmlFor="color-sky-blue"
-                        >
-                          Sky blue
-                        </label>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -1528,7 +1320,8 @@ export class ProductList extends Component {
               </div>
               {/* Products grid*/}
               {list ?
-                <ul className="book-list">
+                <ul
+                  className="book-list">
                   {
                     page.map((product) => {
                       return (

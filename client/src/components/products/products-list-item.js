@@ -2,8 +2,9 @@ import React, {useState} from 'react'
 import './products-list.css'
 import {ModalProduct} from "../modal/modalProduct"
 import {Link} from 'react-router-dom'
-import Box from "@material-ui/core/Box";
-import Rating from "@material-ui/lab/Rating";
+import Box from "@material-ui/core/Box"
+import Rating from "@material-ui/lab/Rating"
+import {addProduct, ratings} from '../localStorage/local-storage'
 
 
 const ProductsListItem = ({product, productDescription}) => {
@@ -16,30 +17,6 @@ const ProductsListItem = ({product, productDescription}) => {
     setShow('none')
   }
   
-  const addProduct = (e) => {
-    let productsTitle = e.currentTarget.title
-    let products = [];
-    if (localStorage.getItem(productsTitle)) {
-      products = JSON.parse(localStorage.getItem(productsTitle))
-    }
-    let pro = products.find(p => p._id === product._id)
-    if (pro) {
-      products.map(p => p._id === product._id ? p.count++ : p.count)
-    }
-    if (!pro) {
-      products.push({
-        _id: product._id,
-        name: name,
-        price: price,
-        img: img,
-        count: 1,
-        review: review,
-        brand: brand
-      })
-    }
-    localStorage.setItem(productsTitle, JSON.stringify(products));
-  }
-  
   return (
     <div>
       <div className="card product-card product-list">
@@ -48,7 +25,7 @@ const ProductsListItem = ({product, productDescription}) => {
                 data-toggle="tooltip"
                 data-placement="left"
                 title="wishlist"
-                onClick={addProduct}
+                onClick={(e) => addProduct(e, product)}
         >
           <i className="czi-heart"/>
         </button>
@@ -78,14 +55,13 @@ const ProductsListItem = ({product, productDescription}) => {
                   </span>
               </div>
               <div className="star-rating">
-                {review[0].rating
-                  ? <Box component="fieldset" mb={3} borderColor="transparent"
-                         name="size-small">
-                    <Rating name="size-small" defaultValue={review[0].rating}
-                            size="small"
-                            precision={0.5} readOnly/>
-                  </Box>
-                  : null}
+                <Box component="fieldset" mb={3} borderColor="transparent"
+                     name="size-small">
+                  <Rating name="size-small"
+                          defaultValue={review.length > 0 ? ratings(review) : 0}
+                          size="small"
+                          precision={0.5} readOnly/>
+                </Box>
               </div>
             </div>
             <div className="card-body card-body-hidden">
@@ -95,7 +71,7 @@ const ProductsListItem = ({product, productDescription}) => {
                 data-toggle="toast"
                 data-target="#cart-toast"
                 title="products"
-                onClick={addProduct}>
+                onClick={(e) => addProduct(e, product)}>
                 <i className="czi-cart font-size-sm mr-1"/>
                 Add to Cart
               </button>
@@ -117,7 +93,9 @@ const ProductsListItem = ({product, productDescription}) => {
       <ModalProduct
         show={show}
         closedModal={closedModal}
-        product={product}/>
+        product={product}
+        productDescription={productDescription}
+      />
     </div>
   );
 };

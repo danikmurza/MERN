@@ -1,45 +1,21 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Rating from '@material-ui/lab/Rating'
 import Box from "@material-ui/core/Box"
 
-import gallery1 from '../css/img/shop/single/gallery/01.jpg'
-import gallery2 from '../css/img/shop/single/gallery/02.jpg'
-import gallery3 from '../css/img/shop/single/gallery/03.jpg'
-import gallery4 from '../css/img/shop/single/gallery/04.jpg'
-import galleryth1 from '../css/img/shop/single/gallery/th01.jpg'
-import galleryth2 from '../css/img/shop/single/gallery/th02.jpg'
-import galleryth3 from '../css/img/shop/single/gallery/th03.jpg'
-import single1 from '../css/img/shop/single/color-opt-1.png'
-import single2 from '../css/img/shop/single/color-opt-2.png'
-import single3 from '../css/img/shop/single/color-opt-3.png'
+import '../../actions/products-action'
+import {addProduct, ratings} from "../localStorage/local-storage"
 
 
-export const ModalProduct = ({show, closedModal, product}) => {
+export const ModalProduct = ({show, closedModal, product, productDescription}) => {
+  
+  const [image, setImage] = useState({
+    img: 'active',
+    img2: '',
+    img3: '',
+    img4: ''
+  })
   
   const {name, brand, price, img, review} = product
-  
-  const addProduct = (e) => {
-    let products = [];
-    if (localStorage.getItem('products')) {
-      products = JSON.parse(localStorage.getItem('products'))
-    }
-    let pro = products.find(p => p._id === product._id)
-    if (pro) {
-      products.map(p => p._id === product._id ? p.count++ : p.count)
-    }
-    if (!pro) {
-      products.push({
-        _id: product._id,
-        name: name,
-        price: price,
-        img: img,
-        count: 1,
-        review: review,
-        brand: brand
-      })
-    }
-    localStorage.setItem('products', JSON.stringify(products));
-  }
   
   return (
     <div className="modal-quick-view modal fade show"
@@ -51,15 +27,18 @@ export const ModalProduct = ({show, closedModal, product}) => {
         <div className="modal-content">
           <div className="modal-header">
             <h4 className="modal-title product-title">
-              <a href="/"
-                 data-toggle="tooltip"
-                 data-placement="right"
-                 title='sport'
-                 data-original-title="Go to product page"
+              <button
+                data-toggle="tooltip"
+                style={{backgroundColor: 'white', border: 'none'}}
+                data-placement="right"
+                title='sport'
+                data-original-title="Go to product page"
+                value={product._id}
+                onClick={productDescription}
               >
                 {name}
                 <i className="czi-arrow-right font-size-lg ml-2"/>
-              </a>
+              </button>
             </h4>
             <button
               className="close"
@@ -77,60 +56,102 @@ export const ModalProduct = ({show, closedModal, product}) => {
               <div className="col-lg-7 pr-lg-0">
                 <div className="cz-product-gallery">
                   <div className="cz-preview order-sm-2">
-                    <div className="cz-preview-item" id="first">
-                      <img className="cz-image-zoom"
-                           src={gallery1}
-                           data-zoom={gallery1}
-                           alt="Product"
-                      />
-                      <div className="cz-image-zoom-pane"/>
-                    </div>
-                    <div className="cz-preview-item" id="second">
-                      <img className="cz-image-zoom"
-                           src={gallery2}
-                           data-zoom={gallery2}
-                           alt="Product"
-                      />
-                      <div className="cz-image-zoom-pane"/>
-                    </div>
-                    <div className="cz-preview-item" id="third">
+    
+    
+                    <div className={`cz-preview-item ${image.img}`} id="first">
                       <img className="cz-image-zoom"
                            src={img}
-                           data-zoom={gallery3}
+                           data-zoom={img}
                            alt="Product"
                       />
                       <div className="cz-image-zoom-pane"/>
                     </div>
-                    <div className="cz-preview-item active" id="fourth">
+                    <div className={`cz-preview-item ${image.img2}`}
+                         id="second">
                       <img className="cz-image-zoom"
                            src={img}
-                           data-zoom={gallery4}
+                           data-zoom={img}
+                           alt="Product"
+                      />
+                      <div className="cz-image-zoom-pane"/>
+                    </div>
+                    <div className={`cz-preview-item ${image.img3}`} id="third">
+                      <img className="cz-image-zoom"
+                           src={img}
+                           data-zoom={img}
+                           alt="Product"
+                      />
+                      <div className="cz-image-zoom-pane"/>
+                    </div>
+                    <div className={`cz-preview-item ${image.img4}`}
+                         id="fourth">
+                      <img className="cz-image-zoom"
+                           src={img}
+                           data-zoom={img}
                            alt="Product"
                       />
                       <div className="cz-image-zoom-pane"/>
                     </div>
                   </div>
                   <div className="cz-thumblist order-sm-1">
-                    <a className="cz-thumblist-item" href="/">
-                      <img src={galleryth1}
-                           alt="Product thumb"
-                      />
-                    </a>
-                    <a className="cz-thumblist-item" href="/">
-                      <img src={galleryth2}
-                           alt="Product thumb"
-                      />
-                    </a>
-                    <a className="cz-thumblist-item" href="/">
-                      <img src={galleryth3}
-                           alt="Product thumb"
-                      />
-                    </a>
-                    <a className="cz-thumblist-item active" href="/">
+    
+    
+                    <button className={`cz-thumblist-item ${image.img}`}
+                            style={{backgroundColor: 'white'}}
+                            onClick={() => {
+                              setImage({
+                                img: 'active',
+                                img2: '',
+                                img3: '',
+                                img4: ''
+                              })
+                            }}>
                       <img src={img}
                            alt="Product thumb"
                       />
-                    </a>
+                    </button>
+                    <button className={`cz-thumblist-item ${image.img2}`}
+                            style={{backgroundColor: 'white'}}
+                            onClick={() => {
+                              setImage({
+                                img: '',
+                                img2: 'active',
+                                img3: '',
+                                img4: ''
+                              })
+                            }}>
+                      <img src={img}
+                           alt="Product thumb"
+                      />
+                    </button>
+                    <button className={`cz-thumblist-item ${image.img3}`}
+                            style={{backgroundColor: 'white'}}
+                            onClick={() => {
+                              setImage({
+                                img: '',
+                                img2: '',
+                                img3: 'active',
+                                img4: ''
+                              })
+                            }}>
+                      <img src={img}
+                           alt="Product thumb"
+                      />
+                    </button>
+                    <button className={`cz-thumblist-item ${image.img}`}
+                            style={{backgroundColor: 'white'}}
+                            onClick={() => {
+                              setImage({
+                                img: '',
+                                img2: '',
+                                img3: '',
+                                img4: 'active'
+                              })
+                            }}>
+                      <img src={img}
+                           alt="Product thumb"
+                      />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -140,27 +161,20 @@ export const ModalProduct = ({show, closedModal, product}) => {
                   <div
                     className="d-flex justify-content-between align-items-center mb-2">
                     <a href="/">
-                      {/*<div className="star-rating">*/}
-                      {/*  <i className="sr-star czi-star-filled active"/>*/}
-                      {/*  <i className="sr-star czi-star-filled active"/>*/}
-                      {/*  <i className="sr-star czi-star-filled active"/>*/}
-                      {/*  <i className="sr-star czi-star-filled active"/>*/}
-                      {/*  <i className="sr-star czi-star"/>*/}
-                      {/*</div>*/}
-                      {review[0].rating
-                        ? <Box component="fieldset" mb={3}
-                               borderColor="transparent">
+                      <div className="star-rating">
+                        <Box component="fieldset" mb={3}
+                             borderColor="transparent">
                           <Rating name="half-rating-read"
                                   size="small"
-                                  defaultValue={review[0].rating}
+                                  defaultValue={review.length > 0 ? ratings(review) : 0}
                                   precision={0.5} readOnly/>
                           <span
                             className="d-inline-block font-size-sm text-body align-middle  ml-3 mb-2">
-                    74 Reviews
+                    {review.length} Reviews
                   </span>
                         </Box>
-                        : null
-                      }
+                      </div>
+  
   
                     </a>
                     <button className="btn-wishlist"
@@ -189,88 +203,14 @@ export const ModalProduct = ({show, closedModal, product}) => {
                 </span>
                     <span className="text-muted">{brand}</span>
                   </div>
-                  <div className="position-relative mr-n4 mb-3">
-                    <div
-                      className="custom-control custom-option custom-control-inline mb-2">
-                      <input className="custom-control-input"
-                             type="radio"
-                             name="color"
-                             id="color1"
-                             defaultChecked
-                      />
-                      <label className="custom-option-label rounded-circle"
-                             htmlFor="color1"
-                      >
-                    <span className="custom-option-color rounded-circle"
-                          style={{
-                            backgroundImage: `url(${single1})`
-                          }}/>
-                      </label>
-                    </div>
-                    <div
-                      className="custom-control custom-option custom-control-inline mb-2">
-                      <input
-                        className="custom-control-input"
-                        type="radio"
-                        name="color"
-                        id="color2"
-                      />
-                      <label
-                        className="custom-option-label rounded-circle"
-                        htmlFor="color2"
-                      >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{
-                        backgroundImage: `url(${single2})`
-                      }}
-                    />
-                      </label>
-                    </div>
-                    <div
-                      className="custom-control custom-option custom-control-inline mb-2">
-                      <input
-                        className="custom-control-input"
-                        type="radio"
-                        name="color"
-                        id="color3"
-                      />
-                      <label
-                        className="custom-option-label rounded-circle"
-                        htmlFor="color3"
-                      >
-                    <span
-                      className="custom-option-color rounded-circle"
-                      style={{
-                        backgroundImage: `url(${single3})`
-                      }}
-                    />
-                      </label>
-                    </div>
+                  <div className="position-relative mr-n4">
                     <div className="product-badge product-available mt-n1">
                       <i className="czi-security-check"/>
                       Product available
                     </div>
                   </div>
-                  <form className="mb-grid-gutter">
-                    <div className="form-group">
-                      <label
-                        className="font-weight-medium pb-1"
-                        htmlFor="product-size"
-                      >
-                        Size:
-                      </label>
-                      <select className="custom-select" required
-                              id={product._id}>
-                        <option value>Select size</option>
-                        <option value="xs">XS</option>
-                        <option value="s">S</option>
-                        <option value="m">M</option>
-                        <option value="l">L</option>
-                        <option value="xl">XL</option>
-                      </select>
-                    </div>
-                    <div className="form-group d-flex align-items-center">
+                  <form className="mb-grid-gutter pt-5">
+                    <div className="form-group d-flex align-items-center ">
                       <select
                         className="custom-select mr-3"
                         style={{width: "5rem"}}
@@ -284,7 +224,7 @@ export const ModalProduct = ({show, closedModal, product}) => {
                       <button
                         className="btn btn-primary btn-shadow btn-block"
                         type="submit"
-                        onClick={addProduct}
+                        onClick={(e) => addProduct(e, product)}
                       >
                         <i className="czi-cart font-size-lg mr-2"/>
                         Add to Cart
@@ -319,5 +259,6 @@ export const ModalProduct = ({show, closedModal, product}) => {
     </div>
   )
 }
+
 
 

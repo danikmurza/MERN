@@ -1,21 +1,3 @@
-function login(email, password) {
-  const requestOptions = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({email, password})
-  };
-  
-  return fetch(`http://localhost:5000/api/auth/login`, requestOptions)
-    .then(handleResponse)
-    .then(products => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem('user', JSON.stringify(products))
-      window.location.reload()
-      
-      return products
-    })
-}
-
 function addProduct(name, brand, specification, price, count, img, type) {
   const requestOptions = {
     method: 'POST',
@@ -26,29 +8,40 @@ function addProduct(name, brand, specification, price, count, img, type) {
   return fetch(`http://localhost:5000/api/product/add`, requestOptions)
     .then(handleResponse)
     .then(products => {
-      // localStorage.setItem('user', JSON.stringify(user))
-      return products
-    })
+        // localStorage.setItem('user', JSON.stringify(user))
+        return products
+      }
+    )
 }
 
-function logout() {
-  // remove user from local storage to log user out
-  localStorage.removeItem('user')
-  window.location.reload()
+function addReview(_id, review) {
+  const requestOptions = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({_id, review})
+  }
   
+  return fetch(`http://localhost:5000/api/product/review`, requestOptions)
+    .then(handleResponse)
+    .then(products => {
+        // localStorage.setItem('user', JSON.stringify(user))
+        return products
+      }
+    )
 }
 
 
 function handleResponse(response) {
   return response.text().then(text => {
-    const data = text && JSON.parse(text)
-    if (!response.ok) {
-      const error = (data && data.message) || response.statusText
-      return Promise.reject(error)
-    }
+      const data = text && JSON.parse(text)
+      if (!response.ok) {
+        const error = (data && data.message) || response.statusText
+        return Promise.reject(error)
+      }
     
-    return data
-  });
+      return data
+    }
+  )
 }
 
 function getAll() {
@@ -70,9 +63,8 @@ function getOne(price) {
 }
 
 export const productService = {
-  login,
-  logout,
   addProduct,
   getAll,
-  getOne
+  getOne,
+  addReview
 }

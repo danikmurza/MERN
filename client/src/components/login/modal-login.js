@@ -50,8 +50,9 @@ export const ModalLogin = () => {
             </button>
           </div>
           <div className="modal-body tab-content py-4">
+  
             <form
-              className="needs-validation tab-pane fade show active"
+              className="needs-validation tab-pane fade "
               autoComplete="off"
               noValidate
               id="signin-tab"
@@ -97,7 +98,7 @@ export const ModalLogin = () => {
                     Remember me
                   </label>
                 </div>
-                <a className="font-size-sm" href="#">
+                <a className="font-size-sm" href="/">
                   Forgot password?
                 </a>
               </div>
@@ -108,8 +109,10 @@ export const ModalLogin = () => {
                 Sign in
               </button>
             </form>
+  
+  
             <form
-              className="needs-validation tab-pane fade"
+              className="needs-validation tab-pane fade show active"
               autoComplete="off"
               noValidate
               id="signup-tab"

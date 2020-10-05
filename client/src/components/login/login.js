@@ -6,49 +6,20 @@ import {Button, Modal} from "react-bootstrap";
 
 
 class MyAccount extends React.Component {
-  constructor(props) {
-    super(props)
     
-    this.state = {
+    state = {
       email: '',
       password: '',
+      confirmPassword: '',
       firstName: '',
       lastName: '',
-      phoneNumber: Number,
-      show: false
+      phoneNumber: '',
+      show: false,
+      text: '',
+      jwtSecret: '',
+      jwtQuestion: ''
     }
-  }
   
-  firstName = (e) => {
-    e.preventDefault()
-    this.setState({firstName: e.target.value})
-  }
-  
-  lastName = (e) => {
-    e.preventDefault()
-    this.setState({lastName: e.target.value})
-  }
-  
-  phoneNumber = (e) => {
-    e.preventDefault()
-    this.setState({phoneNumber: e.target.value})
-  }
-  emailReg = (e) => {
-    e.preventDefault()
-    this.setState({email: e.target.value})
-  }
-  passwordReg = (e) => {
-    e.preventDefault()
-    this.setState({password: e.target.value})
-  }
-  emailPost = (e) => {
-    e.preventDefault()
-    this.setState({email: e.target.value})
-  }
-  passwordPost = (e) => {
-    e.preventDefault()
-    this.setState({password: e.target.value})
-  }
   
   logIn = (e) => {
     e.preventDefault()
@@ -56,32 +27,57 @@ class MyAccount extends React.Component {
     const {dispatch} = this.props
     if (email && password) {
       dispatch(userAction.login(email, password))
-      this.props.history.push('/')
     }
   }
   
   
-  onSubmits = (e) => {
+  onSubmits = async (e) => {
     e.preventDefault()
-    if (this.state.email && this.state.password) {
+    if (this.state.password !== this.state.confirmPassword) {
+      this.setState({show: true, text: "Passwords Don't Match"})
+    }
+    if (this.state.email && this.state.password === this.state.confirmPassword) {
       this.props.dispatch(userAction.register(
         this.state.email,
         this.state.password,
         this.state.firstName,
         this.state.lastName,
-        this.state.phoneNumber
+        this.state.phoneNumber,
+        this.state.jwtQuestion,
+        this.state.jwtSecret
       ))
-      this.setState({show: true})
     }
   }
+  
   
   handleClose = () => {
     this.setState({show: false})
   }
   
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.errorBool !== this.props.errorBool) {
+      this.setState({show: true, text: this.props.error})
+    }
+    if (prevProps.user.length !== this.props.user.length) {
+      this.setState({
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        phoneNumber: ''
+      })
+      this.props.history.push('/')
+      window.location.reload()
+    }
+  }
+  
   
   render() {
-    const {show} = this.state
+    const {
+      show, email, password, firstName, lastName, phoneNumber, text, confirmPassword, jwtSecret,
+      jwtQuestion
+    } = this.state
+    
     return (
       <div className="container py-4 py-lg-5 my-4">
         
@@ -91,7 +87,7 @@ class MyAccount extends React.Component {
           </Modal.Header>
           
           <Modal.Body>
-            <h3 className="text-center">User created</h3>
+            <h5 className="text-center">{text}</h5>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={this.handleClose}>
@@ -157,7 +153,8 @@ class MyAccount extends React.Component {
                       id="emails"
                       name="email"
                       required
-                      onChange={this.emailPost}
+    
+                      onChange={e => this.setState({email: e.target.value})}
                     />
                   </div>
                   <div className="input-group-overlay form-group">
@@ -174,7 +171,8 @@ class MyAccount extends React.Component {
                         id="password"
                         name="password"
                         required
-                        onChange={this.passwordPost}
+    
+                        onChange={e => this.setState({password: e.target.value})}
                       />
                       <label className="password-toggle-btn">
                         <input className="custom-control-input"
@@ -233,7 +231,8 @@ class MyAccount extends React.Component {
                     <input className="form-control"
                            type="text"
                            id="reg-fn"
-                           onChange={this.firstName}
+                           value={firstName}
+                           onChange={e => this.setState({firstName: e.target.value})}
                     />
                     <div className="invalid-feedback">
                       Please enter your first name!
@@ -246,7 +245,37 @@ class MyAccount extends React.Component {
                     <input className="form-control"
                            type="text"
                            id="reg-ln"
-                           onChange={this.lastName}
+                           value={lastName}
+                           onChange={e => this.setState({lastName: e.target.value})}
+                    />
+                    <div className="invalid-feedback">
+                      Please enter your last name!
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="reg-fn">Secret Question</label>
+                    <input className="form-control"
+                           type="text"
+                           id="reg-fn"
+                           value={jwtQuestion}
+                           onChange={e => this.setState({jwtQuestion: e.target.value})}
+      
+                    />
+                    <div className="invalid-feedback">
+                      Please enter your first name!
+                    </div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="reg-ln">Answer</label>
+                    <input className="form-control"
+                           type="text"
+                           id="reg-ln"
+                           value={jwtSecret}
+                           onChange={e => this.setState({jwtSecret: e.target.value})}
                     />
                     <div className="invalid-feedback">
                       Please enter your last name!
@@ -262,7 +291,8 @@ class MyAccount extends React.Component {
                       id="email"
                       name="email"
                       required
-                      onChange={this.emailReg}
+                      value={email}
+                      onChange={e => this.setState({email: e.target.value})}
                     />
                     <div className="invalid-feedback">
                       Please enter valid email address!
@@ -276,8 +306,8 @@ class MyAccount extends React.Component {
                       className="form-control"
                       type="text"
                       id="reg-phone"
-                      onChange={this.phoneNumber}
-                    
+                      value={phoneNumber}
+                      onChange={e => this.setState({phoneNumber: e.target.value})}
                     />
                     <div className="invalid-feedback">
                       Please enter your phone number!
@@ -293,7 +323,8 @@ class MyAccount extends React.Component {
                       id="reg-password"
                       name="password"
                       required
-                      onChange={this.passwordReg}
+                      value={password}
+                      onChange={e => this.setState({password: e.target.value})}
                     />
                     <div className="invalid-feedback">Please enter password!
                     </div>
@@ -306,12 +337,19 @@ class MyAccount extends React.Component {
                     <input
                       className="form-control"
                       type="password"
+                      id="reg-confirmPassword"
+                      name="confirmPassword"
                       required
-                      id="reg-password-confirm"
+                      value={confirmPassword}
+                      onChange={e => this.setState({confirmPassword: e.target.value})}
                     />
-                    <div className="invalid-feedback">Passwords do not
-                      match!
-                    </div>
+                    {password !== confirmPassword ?
+                      <div className="invalid-feedback">Passwords do not
+                        match!
+                      </div>
+                      : null
+                    }
+
                   </div>
                 </div>
               </div>
@@ -331,8 +369,8 @@ class MyAccount extends React.Component {
 }
 
 
-const mapStateToProps = ({authentication: {loggingIn, user}}) => {
-  return {loggingIn, user}
+const mapStateToProps = ({authentication: {loggingIn, user, error, errorBool}}) => {
+  return {loggingIn, user, error, errorBool}
 }
 
 

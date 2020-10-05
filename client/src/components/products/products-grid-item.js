@@ -2,40 +2,16 @@ import React, {useState} from 'react'
 import {ModalProduct} from "../modal/modalProduct"
 import Rating from '@material-ui/lab/Rating'
 import Box from "@material-ui/core/Box"
+import {addProduct, ratings} from "../localStorage/local-storage";
 
 
 const ProductsGridItem = ({product, productDescription}) => {
-  const {name, price, img, count, review, brand} = product
+  const {name, price, img, count, review} = product
   
   const [show, setShow] = useState('none')
   const closedModel = () => {
     setShow('none')
   }
-  
-  const addProduct = (e) => {
-    let productsTitle = e.currentTarget.title
-    let products = [];
-    if (localStorage.getItem(productsTitle)) {
-      products = JSON.parse(localStorage.getItem(productsTitle))
-    }
-    let pro = products.find(p => p._id === product._id)
-    if (pro) {
-      products.map(p => p._id === product._id ? p.count++ : p.count)
-    }
-    if (!pro) {
-      products.push({
-        _id: product._id,
-        name: name,
-        price: price,
-        img: img,
-        count: 1,
-        review: review,
-        brand: brand
-      })
-    }
-    localStorage.setItem(productsTitle, JSON.stringify(products));
-  }
-  
   return (
     <div>
       <div className="card product-card">
@@ -44,7 +20,8 @@ const ProductsGridItem = ({product, productDescription}) => {
                 data-toggle="tooltip"
                 data-placement="left"
                 title="wishlist"
-                onClick={addProduct}
+                value={product._id}
+                onClick={(e) => addProduct(e, product)}
         >
           <i className="czi-heart"/>
         </button>
@@ -76,15 +53,13 @@ const ProductsGridItem = ({product, productDescription}) => {
                       ${price}
                     </span>
             </div>
-            {review[0].rating
-              ? <Box component="fieldset" mb={3} borderColor="transparent">
-                <Rating name="half-rating-read" defaultValue={review[0].rating}
-                        size="small"
-                        precision={0.5} readOnly/>
-              </Box>
-              : null
-            }
-          
+            <Box component="fieldset" mb={3} borderColor="transparent">
+              <Rating name="half-rating-read"
+                      defaultValue={review.length > 0 ? ratings(review) : 0}
+                      size="small"
+                      precision={0.5} readOnly/>
+            </Box>
+  
           </div>
         </div>
         <div className="card-body card-body-hidden">
@@ -94,7 +69,8 @@ const ProductsGridItem = ({product, productDescription}) => {
             type="button"
             data-toggle="toast"
             data-target="/cart-toast"
-            onClick={addProduct}
+            value={product._id}
+            onClick={(e) => addProduct(e, product)}
           >
             <i className="czi-cart font-size-sm mr-1"/>
             Add to Cart
@@ -113,16 +89,14 @@ const ProductsGridItem = ({product, productDescription}) => {
         </div>
       </div>
       <hr className="d-sm-none"/>
-      <ModalProduct
-        show={show}
-        closedModal={closedModel}
-        product={product}
-        // onAddedToCart={onAddedToCart}
-      
+      <ModalProduct show={show}
+                    closedModal={closedModel}
+                    product={product}
+                    productDescription={productDescription}
       />
     </div>
-  );
-};
+  )
+}
 
 
 export default ProductsGridItem

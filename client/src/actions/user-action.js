@@ -38,13 +38,90 @@ function login(email, password) {
   }
 }
 
-function register(email, password, firstName, lastName, phoneNumber) {
+function register(email, password, firstName, lastName, phoneNumber, jwtQuestion, jwtSecret) {
   return dispatch => {
     dispatch(request({email}))
     
-    userService.register(email, password, firstName, lastName, phoneNumber)
+    userService.register(email, password, firstName, lastName, phoneNumber, jwtQuestion, jwtSecret)
       .then(
         user => {
+          dispatch(success(user))
+        },
+        error => {
+          dispatch(failure(error))
+        }
+      )
+  }
+}
+
+function avatar(data) {
+  return dispatch => {
+    dispatch(request())
+    
+    userService.uploadAvatar(data)
+      .then(
+        user => {
+          dispatch(success(user))
+        },
+        error => {
+          dispatch(failure(error))
+        }
+      )
+  }
+}
+
+function updateProfile(_id, firstName, lastName, password, phoneNumber) {
+  return dispatch => {
+    dispatch(request({_id}))
+    
+    userService.updateProfile(_id, firstName, lastName, password, phoneNumber)
+      .then(
+        user => {
+          dispatch(success(user))
+        },
+        error => {
+          dispatch(failure(error))
+        }
+      )
+  }
+}
+
+const address = (_id, address, action) => {
+  return async dispatch => {
+    dispatch(request(_id))
+    
+    await userService.address(_id, address, action)
+      .then(user => {
+          dispatch(success(user))
+        },
+        error => {
+          dispatch(failure(error))
+        }
+      )
+  }
+}
+
+const orders = (_id, orders) => {
+  return async dispatch => {
+    dispatch(request(_id))
+    
+    await userService.orders(_id, orders)
+      .then(user => {
+          dispatch(success(user))
+        },
+        error => {
+          dispatch(failure(error))
+        }
+      )
+  }
+}
+
+const ticket = (userId, subject, type, priority, description, status) => {
+  return async dispatch => {
+    dispatch(request(userId))
+    
+    await userService.tickets(userId, subject, type, priority, description, status)
+      .then(user => {
           dispatch(success(user))
         },
         error => {
@@ -91,5 +168,10 @@ export const userAction = {
   logout,
   getAll,
   register,
-  deleteUser
+  deleteUser,
+  updateProfile,
+  address,
+  orders,
+  ticket,
+  avatar
 }

@@ -1,17 +1,19 @@
-import React from 'react'
+import React, {useState} from 'react'
 import avatar from "../css/img/shop/account/avatar.jpg"
 import {Link} from "react-router-dom";
 import {userAction} from "../../actions";
+import {removeCart} from "../localStorage/local-storage"
+import {connect} from 'react-redux'
 
-export const AccountWishlist = () => {
-  let storageProducts = JSON.parse(localStorage.getItem('wishlist'));
-  const removeCart = (e) => {
-    e.preventDefault()
-    let products = storageProducts.filter(product => product._id !== e.currentTarget.value);
-    localStorage.setItem('wishlist', JSON.stringify(products))
-    window.location.reload()
-  }
+const AccountWishlist = (props) => {
+  const [wishlist, setWishlist] = useState(JSON.parse(localStorage.getItem('wishlist')))
+  const [user] = useState(JSON.parse(localStorage.getItem('user')).user)
   
+  const Logout = (e) => {
+    e.preventDefault()
+    props.dispatch(userAction.logout())
+    props.history.push('/shop')
+  }
   return (
     <div>
       {/* Page Title*/}
@@ -67,10 +69,10 @@ export const AccountWishlist = () => {
                          alt="Susan Gardner"/>
                   </div>
                   <div className="media-body pl-3">
-                    <h3 className="font-size-base mb-0">Susan Gardner</h3>
+                    <h3
+                      className="font-size-base mb-0">{user.firstName ? user.firstName : null} {user ? user.lastName : null}</h3>
                     <span className="text-accent font-size-sm">
-                  s.gardner@example.com
-                </span>
+                      {user ? user.email : null} </span>
                   </div>
                 </div>
               </div>
@@ -84,7 +86,7 @@ export const AccountWishlist = () => {
                     to="/account_orders">
                     <i className="czi-bag opacity-60 mr-2"/>
                     Orders<span
-                    className="font-size-sm text-muted ml-auto">1</span>
+                    className="font-size-sm text-muted ml-auto">{user.orders ? user.orders.length : 0}</span>
                   </Link>
                 </li>
                 <li className="border-bottom mb-0">
@@ -95,7 +97,7 @@ export const AccountWishlist = () => {
                     <i className="czi-heart opacity-60 mr-2"/>
                     Wishlist
                     <span
-                      className="font-size-sm text-muted ml-auto">{storageProducts.length}</span>
+                      className="font-size-sm text-muted ml-auto">{wishlist ? wishlist.length : 0}</span>
                   </Link>
                 </li>
                 <li className="mb-0">
@@ -105,7 +107,8 @@ export const AccountWishlist = () => {
                   >
                     <i className="czi-help opacity-60 mr-2"/>
                     Support tickets
-                    <span className="font-size-sm text-muted ml-auto">1</span>
+                    <span
+                      className="font-size-sm text-muted ml-auto">{user.ticket.length > 0 ? user.ticket.length : 0}</span>
                   </Link>
                 </li>
               </ul>
@@ -162,7 +165,7 @@ export const AccountWishlist = () => {
                 List of items you added to wishlist:
               </h6>
               <Link className="btn btn-primary btn-sm"
-                    onClick={() => userAction.logout()}
+                    onClick={Logout}
                     to="/">
                 <i className="czi-sign-out mr-2"/>
                 Sign out
@@ -171,8 +174,8 @@ export const AccountWishlist = () => {
             {/* Wishlist*/}
             {/* Item*/}
             <ul className="m-0 p-0" style={{listStyle: "none"}}>
-              {storageProducts
-                ? storageProducts.map((product, index) => {
+              {wishlist
+                ? wishlist.map((product, index) => {
                   const {_id, name, price, img, brand} = product
                   return (
                     <li className="m-0 p-0" key={index}>
@@ -208,7 +211,8 @@ export const AccountWishlist = () => {
                           <button className="btn btn-outline-danger btn-sm"
                                   type="button"
                                   value={_id}
-                                  onClick={removeCart}
+                                  id="wishlist"
+                                  onClick={(e) => setWishlist(removeCart(e))}
                           >
                             <i className="czi-trash mr-2"/>
                             Remove
@@ -227,3 +231,6 @@ export const AccountWishlist = () => {
     </div>
   )
 }
+
+
+export default connect(null, null)(AccountWishlist)

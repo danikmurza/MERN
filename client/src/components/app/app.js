@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import {Route, Switch} from 'react-router-dom'
 import {Redirect} from "react-router-dom"
-import NewsPage from "../add-products/add-product"
+import NewsPage from "../admin/add-product"
 import Products from '../products/products'
 import Header from '../header/header'
 import {Footer} from "../footer/footer"
@@ -9,19 +9,18 @@ import MyAccount from "../login/login"
 import {RecoveryPassword} from '../login/recovery-password'
 import {OrderTracking} from "../order-tracking/order-tracking"
 import {YourCart} from "../shopping-cart-table/your-cart"
-// import HomePage from "../home/home"
 import {Categories} from "../categories/categories"
-import {Review} from "../shopping-cart-table/review"
+import Review from "../shopping-cart-table/review"
 import {Complete} from "../shopping-cart-table/complete"
 import {Comparison} from "../comparison/comparison"
 import {Error404} from "../404/404"
 import {AboutPage} from "../about"
-import {AccountAddress} from "../account/account-address"
+import AccountAddress from "../account/account-address"
 import {AccountPayment} from "../account/account-payment"
-import {AccountProfile} from "../account/account-profile"
+import AccountProfile from "../account/account-profile"
 import {AccountSingleTicket} from "../account/account-single-ticket"
-import {AccountTickets} from "../account/account-tickets"
-import {AccountWishlist} from "../account/account-wishlist"
+import AccountTickets from "../account/account-tickets"
+import AccountWishlist from "../account/account-wishlist"
 import {Contacts} from "../contacts/contacts"
 import {HelpTopics} from "../help-page/help-topics"
 import {HelpSingleTopic} from "../help-page/help-single-topic"
@@ -29,16 +28,14 @@ import {SubmitRequest} from "../help-page/submit-request"
 import {YourDetails} from "../shopping-cart-table/your-details"
 import {Shipping} from "../shopping-cart-table/shipping"
 import {Payments} from "../shopping-cart-table/payment"
-import {AccountOrders} from "../account/account-orders"
-import AllUser from "../admin/admin-page";
-import ProductDescription from "../products/product-description";
+import AccountOrders from "../account/account-orders"
+import AllUser from "../admin/admin-page"
+import ProductDescription from "../products/product-description"
 
 
 const Navigation = () => {
-  const user = JSON.parse(localStorage.getItem('user'))
-  useEffect(() => {
+  const [user] = useState(JSON.parse(localStorage.getItem('user')))
   
-  }, [user])
   if (user) {
     return (
       <div>
@@ -46,7 +43,7 @@ const Navigation = () => {
         <Switch>
           {/*<Route path="/" component={HomePage} exact/>*/}
           <Route path="/store" component={Products}/>
-          <Route path="/my_account" component={MyAccount}/>
+          {/*<Route path="/my_account" component={MyAccount}/>*/}
           <Route path="/categories" component={Categories}/>
           <Route path="/compare" component={Comparison}/>
           <Route path="/error404" component={Error404}/>
@@ -72,7 +69,7 @@ const Navigation = () => {
           <Route path="/review" component={Review}/>
           <Route path="/complete" component={Complete}/>
           <Route path="/add" component={NewsPage}/>
-          <Route path="/all_user" component={AllUser}/>
+          <Route path="/users" component={AllUser}/>
           <Route path="/pd" component={ProductDescription}/>
           <Redirect to="/store" from="/*"/>
         </Switch>
@@ -80,9 +77,6 @@ const Navigation = () => {
       </div>
     )
   } else if (!user) {
-    useEffect(() => {
-    
-    }, [user])
     return (
       <div>
         <Header/>
@@ -115,9 +109,7 @@ const Navigation = () => {
 }
 
 export const App = () => {
-  // useEffect(() => {
-  //
-  // }, [user] )
+  
   return (
     <div>
       <Navigation/>

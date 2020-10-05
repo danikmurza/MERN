@@ -21,11 +21,27 @@ export function ProError(error) {
 }
 
 
-function processorAdd(name, brand, specification, price, count, img, type) {
+function productAdd(name, brand, specification, price, count, img, type) {
   return dispatch => {
     dispatch(ProRequest())
     
     productService.addProduct(name, brand, specification, price, count, img, type)
+      .then(
+        user => {
+          dispatch(ProSuccess(user))
+        },
+        error => {
+          dispatch(ProError(error))
+        }
+      )
+  }
+}
+
+function reviewAdd(_id, review) {
+  return dispatch => {
+    dispatch(ProRequest())
+    
+    productService.addReview(_id, review)
       .then(
         user => {
           dispatch(ProSuccess(user))
@@ -59,8 +75,9 @@ function getOne(price) {
   }
 }
 
-export const processorAction = {
+export const productAddAction = {
   getAll,
-  processorAdd,
-  getOne
+  productAdd,
+  getOne,
+  reviewAdd
 }

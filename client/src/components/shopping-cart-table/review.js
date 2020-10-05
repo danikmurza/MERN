@@ -1,14 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Link} from "react-router-dom"
+import {userAction} from "../../actions"
+import {connect} from 'react-redux'
+import {ID} from "../localStorage/local-storage"
 
 
-export const Review = () => {
-  const cart = JSON.parse(localStorage.getItem('products'))
+const Review = (props) => {
+  
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem('products')))
+  
   let summa = 0
   if (cart) {
     let sum = []
     cart.map((a) => sum.push(a.price))
     summa = sum.reduce((a, b) => a + b, 0).toFixed(2)
+  }
+  
+  
+  const buy = () => {
+    let status = 'InProgress'
+    let obj = {orderNumber: ID(), date: new Date(), status, total: summa, cart}
+    let one = JSON.parse(localStorage.getItem('user')).user
+    console.log(ID())
+    props.dispatch(userAction.orders(one._id, obj))
+    localStorage.removeItem('products')
+    setCart(JSON.parse(localStorage.getItem('products')))
+    props.history.push('/complete')
   }
   return (
     <div>
@@ -21,13 +38,13 @@ export const Review = () => {
               <ol
                 className="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
                 <li className="breadcrumb-item">
-                  <a className="text-nowrap" href="/">
+                  <Link className="text-nowrap" to="/">
                     <i className="czi-home"/>
                     Home
-                  </a>
+                  </Link>
                 </li>
                 <li className="breadcrumb-item text-nowrap">
-                  <a href="/">Shop</a>
+                  <Link to="/shop">Shop</Link>
                 </li>
                 <li
                   className="breadcrumb-item text-nowrap active"
@@ -104,8 +121,9 @@ export const Review = () => {
                 ? cart.map((product, index) => {
                   const {name, price, count, img, brand} = product
                   console.log(img)
-                  return (<li className="m-0 p-0" key={index}>
-            
+                  return (
+                    <li className="m-0 p-0" key={index}>
+        
                       <div
                         className="d-sm-flex justify-content-between my-4 pb-3 border-bottom">
                         <div
@@ -201,14 +219,14 @@ export const Review = () => {
                 </Link>
               </div>
               <div className="w-50 pl-2">
-                <Link
+                <button
                   className="btn btn-primary btn-block"
-                  to="/complete"
+                  onClick={buy}
                 >
                   <span className="d-none d-sm-inline">Complete order</span>
                   <span className="d-inline d-sm-none">Complete</span>
                   <i className="czi-arrow-right mt-sm-0 ml-1"/>
-                </Link>
+                </button>
               </div>
             </div>
           </section>
@@ -280,14 +298,14 @@ export const Review = () => {
                 </a>
               </div>
               <div className="w-50 pl-2">
-                <a
+                <button
                   className="btn btn-primary btn-block"
-                  href="/"
+                  onClick={buy}
                 >
                   <span className="d-none d-sm-inline">Complete order</span>
                   <span className="d-inline d-sm-none">Complete</span>
                   <i className="czi-arrow-right mt-sm-0 ml-1"/>
-                </a>
+                </button>
               </div>
             </div>
           </div>
@@ -297,3 +315,4 @@ export const Review = () => {
     </div>
   )
 }
+export default connect(null, null)(Review)

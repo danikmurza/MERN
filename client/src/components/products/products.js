@@ -52,10 +52,10 @@ class Products extends Component {
       this.setState({update: 1})
     }
     if ('popularity' === e.target.value) {
-      // this.setState({sortingProducts: this.props.products})
+  
     }
     if ('average-rating' === e.target.value) {
-      // this.setState({sortingProducts: this.props.products})
+  
     }
   }
   

@@ -5,57 +5,124 @@ import ErrorIndicator from "../error-indicator"
 import Link from "@material-ui/core/Link"
 import Box from "@material-ui/core/Box"
 import Rating from "@material-ui/lab/Rating"
+import {addProduct, ratings} from '../localStorage/local-storage'
+import {productAddAction} from "../../actions";
 
 
 export class ProductDescription extends Component {
+  
   state = {
     local: JSON.parse(localStorage.getItem('id')),
     general: true,
     techSpecs: false,
     rev: false,
+    author: '',
+    email: '',
+    rating: 'Choose rating',
+    description: '',
+    pros: '',
+    cons: '',
+    reviews: [],
+    image1: 'active',
+    image2: '',
+    image3: '',
+    image4: '',
     
   }
   
-  addProductTitle = (e) => {
-    const {_id, name, price, img, review, brand} = this.props.products[0]
-    let productsTitle = e.currentTarget.title
-    let products = []
-    if (localStorage.getItem(productsTitle)) {
-      products = JSON.parse(localStorage.getItem(productsTitle))
-    }
-    
-    let pro = products.find(p => p._id === e.currentTarget.value)
-    if (pro) {
-      products.map(p => p._id === this.props.products[0]._id ? p.count++ : p.count)
-    }
-    if (!pro) {
-      products.push({
-        _id: _id,
-        name: name,
-        price: price,
-        img: img,
-        count: 1,
-        review: review,
-        brand: brand
-      })
-    }
-    localStorage.setItem(productsTitle, JSON.stringify(products))
+  writeName = (e) => {
+    e.preventDefault()
+    this.setState({author: e.target.value})
   }
+  writeEmail = (e) => {
+    e.preventDefault()
+    this.setState({email: e.target.value})
+  }
+  writeRating = (e) => {
+    e.preventDefault()
+    this.setState({rating: e.target.value})
+    
+  }
+  writeDescription = (e) => {
+    e.preventDefault()
+    this.setState({description: e.target.value})
+  }
+  writePros = (e) => {
+    e.preventDefault()
+    this.setState({pros: e.target.value})
+  }
+  writeCons = (e) => {
+    e.preventDefault()
+    this.setState({cons: e.target.value})
+  }
+  writeReview = (e) => {
+    e.preventDefault()
+    const {_id} = this.props.products[0]
+    const {author, email, rating, description, pros, cons} = this.state
+    this.props.dispatch(productAddAction.reviewAdd(_id, {
+      author, email, rating, description, pros, cons
+    }))
+    this.setState({
+      author: '',
+      email: '',
+      rating: 'Choose rating',
+      description: '',
+      pros: '',
+      cons: ''
+    })
+  }
+  
+  sortReview = (e) => {
+    e.preventDefault()
+    const {review} = this.props.products[0]
+    switch (e.target.value) {
+      case 'oldest':
+        this.setState({reviews: review.sort((a, b) => new Date(a.date) - new Date(b.date))})
+        break
+      case 'newest':
+        this.setState({reviews: review.sort((a, b) => new Date(b.date) - new Date(a.date))})
+        break
+      case 'high-rating':
+        this.setState({reviews: review.sort((a, b) => b.rating - a.rating)})
+        break
+      case 'low-rating':
+        this.setState({reviews: review.sort((a, b) => a.rating - b.rating)})
+        break
+      default:
+        this.setState({reviews: review})
+    }
+  }
+  
   
   render() {
+    
     const {products, loading, error} = this.props
-    const {general, techSpecs, rev} = this.state
+    const {general, techSpecs, rev, image1, image2, image3, image4} = this.state
     
     if (loading) {
       return <Spinner/>
     }
-    
     if (error) {
       return <ErrorIndicator/>
     }
     if (products) {
+  
       const {_id, name, price, img, count, review, brand, specification} = products[0]
-      
+      let fifth, fourth, third, second, one = 0;
+  
+      let arr5 = review.filter((item) => item.rating === 5).length
+      let arr4 = review.filter((item) => item.rating === 4).length
+      let arr3 = review.filter((item) => item.rating === 3).length
+      let arr2 = review.filter((item) => item.rating === 2).length
+      let arr1 = review.filter((item) => item.rating === 1).length
+      let proc = 100 / (arr5 + arr4 + arr3 + arr2 + arr1)
+  
+      fifth = arr5 * proc
+      fourth = arr4 * proc
+      third = arr3 * proc
+      second = arr2 * proc
+      one = arr1 * proc
+  
       return (
         <div>
           <div className="page-title-overlap bg-dark pt-4">
@@ -88,15 +155,13 @@ export class ProductDescription extends Component {
                 </h1>
                 <div>
                   <div className="star-rating">
-                    {review[0].rating
-                      ? <Box component="fieldset" mb={3}
-                             borderColor="transparent">
-                        <Rating name="half-rating-read"
-                                defaultValue={review[0].rating}
-                                size="small"
-                                precision={0.5} readOnly/>
-                      </Box>
-                      : null}
+                    <Box component="fieldset" mb={3}
+                         borderColor="transparent">
+                      <Rating name="half-rating-read"
+                              defaultValue={review.length > 0 ? ratings(review) : 0}
+                              size="small"
+                              precision={0.5} readOnly/>
+                    </Box>
                   </div>
                   <span
                     className="d-inline-block font-size-sm text-white opacity-70 align-middle mb-4 ml-2">
@@ -170,7 +235,8 @@ export class ProductDescription extends Component {
                       <div className="col-lg-7 pr-lg-0">
                         <div className="cz-product-gallery">
                           <div className="cz-preview order-sm-2">
-                            <div className="cz-preview-item active" id="first">
+                            <div className={`cz-preview-item ${image1}`}
+                                 id="first">
                               <img
                                 className="cz-image-zoom"
                                 src={img}
@@ -179,7 +245,8 @@ export class ProductDescription extends Component {
                               />
                               <div className="cz-image-zoom-pane"/>
                             </div>
-                            <div className="cz-preview-item" id="second">
+                            <div className={`cz-preview-item ${image2}`}
+                                 id="second">
                               <img
                                 className="cz-image-zoom"
                                 src={img}
@@ -188,7 +255,8 @@ export class ProductDescription extends Component {
                               />
                               <div className="cz-image-zoom-pane"/>
                             </div>
-                            <div className="cz-preview-item" id="third">
+                            <div className={`cz-preview-item ${image3}`}
+                                 id="third">
                               <img
                                 className="cz-image-zoom"
                                 src={img}
@@ -197,7 +265,8 @@ export class ProductDescription extends Component {
                               />
                               <div className="cz-image-zoom-pane"/>
                             </div>
-                            <div className="cz-preview-item" id="fourth">
+                            <div className={`cz-preview-item ${image4}`}
+                                 id="fourth">
                               <img
                                 className="cz-image-zoom"
                                 src={img}
@@ -208,39 +277,61 @@ export class ProductDescription extends Component {
                             </div>
                           </div>
                           <div className="cz-thumblist order-sm-1">
-                            <a className="cz-thumblist-item active" href="/">
-                              <img
-                                src={img}
-                                alt="Product thumb"
-                              />
-                            </a>
-                            <a className="cz-thumblist-item" href="/">
-                              <img
-                                src={img}
-                                alt="Product thumb"
-                              />
-                            </a>
-                            <a className="cz-thumblist-item" href="/">
-                              <img
-                                src={img}
-                                alt="Product thumb"
-                              />
-                            </a>
-                            <a className="cz-thumblist-item" href="/">
-                              <img
-                                src={img}
-                                alt="Product thumb"
-                              />
-                            </a>
-                            <a
-                              className="cz-thumblist-item video-item"
-                              href="https://www.youtube.com/watch?v=nrQevwouWn0"
+    
+    
+                            <button className={`cz-thumblist-item ${image1}`}
+                                    style={{backgroundColor: 'white'}}
+                                    onClick={() => this.setState({
+                                      image1: 'active',
+                                      image2: '',
+                                      image3: '',
+                                      image4: ''
+                                    })}
                             >
-                              <div className="cz-thumblist-item-text">
-                                <i className="czi-video"/>
-                                Video
-                              </div>
-                            </a>
+                              <img
+                                src={img}
+                                alt="Product thumb"
+                              />
+                            </button>
+                            <button className={`cz-thumblist-item ${image2}`}
+                                    style={{backgroundColor: 'white'}}
+                                    onClick={() => this.setState({
+                                      image1: '',
+                                      image2: 'active',
+                                      image3: '',
+                                      image4: ''
+                                    })}>
+                              <img
+                                src={img}
+                                alt="Product thumb"
+                              />
+                            </button>
+                            <button className={`cz-thumblist-item ${image3}`}
+                                    style={{backgroundColor: 'white'}}
+                                    onClick={() => this.setState({
+                                      image1: '',
+                                      image2: '',
+                                      image3: 'active',
+                                      image4: ''
+                                    })}>
+                              <img
+                                src={img}
+                                alt="Product thumb"
+                              />
+                            </button>
+                            <button className={`cz-thumblist-item ${image4}`}
+                                    style={{backgroundColor: 'white'}}
+                                    onClick={() => this.setState({
+                                      image1: '',
+                                      image2: '',
+                                      image3: '',
+                                      image4: 'active'
+                                    })}>
+                              <img
+                                src={img}
+                                alt="Product thumb"
+                              />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -286,7 +377,7 @@ export class ProductDescription extends Component {
                               type="button"
                               title="products"
                               value={_id}
-                              onClick={this.addProductTitle}
+                              onClick={(e) => addProduct(e, products[0])}
                             >
                               <i className="czi-cart font-size-lg mr-2"/>
                               Add to Cart
@@ -299,7 +390,7 @@ export class ProductDescription extends Component {
                                 type="button"
                                 title="wishlist"
                                 value={_id}
-                                onClick={this.addProductTitle}
+                                onClick={(e) => addProduct(e, products[0])}
                               >
                                 <i className="czi-heart font-size-lg mr-2"/>
                                 <span
@@ -313,7 +404,7 @@ export class ProductDescription extends Component {
                                 type="button"
                                 title="compare"
                                 value={_id}
-                                onClick={this.addProductTitle}
+                                onClick={(e) => addProduct(e, products[0])}
                               >
                                 <i className="czi-compare font-size-lg mr-2"/>
                                 Compare
@@ -462,7 +553,7 @@ export class ProductDescription extends Component {
                         />
                         <div className="mdeia-body pl-3">
                           <h6 className="font-size-base mb-2">
-                            Smartwatch Youth Edition
+                            {name}
                           </h6>
                           <div className="h4 font-weight-normal text-accent">
                             ${price}
@@ -485,7 +576,7 @@ export class ProductDescription extends Component {
                           type="button"
                           title="products"
                           value={_id}
-                          onClick={this.addProductTitle}
+                          onClick={(e) => addProduct(e, products[0])}
                         >
                           <i className="czi-cart font-size-lg mr-sm-2"/>
                           <span
@@ -498,7 +589,7 @@ export class ProductDescription extends Component {
                             data-toggle="tooltip"
                             title="wishlist"
                             value={_id}
-                            onClick={this.addProductTitle}
+                            onClick={(e) => addProduct(e, products[0])}
                           >
                             <i className="czi-heart font-size-lg"/>
                           </button>
@@ -510,7 +601,7 @@ export class ProductDescription extends Component {
                             data-toggle="tooltip"
                             value={_id}
                             title="compare"
-                            onClick={this.addProductTitle}
+                            onClick={(e) => addProduct(e, products[0])}
                           >
                             <i className="czi-compare font-size-lg"/>
                           </button>
@@ -656,7 +747,7 @@ export class ProductDescription extends Component {
                         />
                         <div className="mdeia-body pl-3">
                           <h6 className="font-size-base mb-2">
-                            Smartwatch Youth Edition
+                            {name}
                           </h6>
                           <div className="h4 font-weight-normal text-accent">
                             ${price}
@@ -679,7 +770,7 @@ export class ProductDescription extends Component {
                           type="button"
                           title="products"
                           value={_id}
-                          onClick={this.addProductTitle}
+                          onClick={(e) => addProduct(e, products[0])}
                         >
                           <i className="czi-cart font-size-lg mr-sm-2"/>
                           <span
@@ -692,7 +783,7 @@ export class ProductDescription extends Component {
                             data-toggle="tooltip"
                             title="wishlist"
                             value={_id}
-                            onClick={this.addProductTitle}
+                            onClick={(e) => addProduct(e, products[0])}
                           >
                             <i className="czi-heart font-size-lg"/>
                           </button>
@@ -704,7 +795,7 @@ export class ProductDescription extends Component {
                             data-toggle="tooltip"
                             title="compare"
                             value={_id}
-                            onClick={this.addProductTitle}
+                            onClick={(e) => addProduct(e, products[0])}
                           >
                             <i className="czi-compare font-size-lg"/>
                           </button>
@@ -716,18 +807,16 @@ export class ProductDescription extends Component {
                       <div className="col-lg-4 col-md-5">
                         <h2 className="h3 mb-4">{review.length} Reviews</h2>
                         <div className="star-rating mr-2">
-                          <i
-                            className="czi-star-filled font-size-sm text-accent mr-1"/>
-                          <i
-                            className="czi-star-filled font-size-sm text-accent mr-1"/>
-                          <i
-                            className="czi-star-filled font-size-sm text-accent mr-1"/>
-                          <i
-                            className="czi-star-filled font-size-sm text-accent mr-1"/>
-                          <i className="czi-star font-size-sm text-muted mr-1"/>
+                          <Box component="fieldset" mb={3}
+                               borderColor="transparent">
+                            <Rating name="half-rating-read"
+                                    defaultValue={review.length > 0 ? ratings(review) : 0}
+                                    size="small"
+                                    precision={0.5} readOnly/>
+                          </Box>
                         </div>
-                        <span className="d-inline-block align-middle">
-                  4.1 Overall rating
+                        <span className="d-inline-block align-middle mb-4">
+                  {review.length > 0 ? ratings(review).toFixed(1) : 0} Overall rating
                 </span>
                         <p className="pt-3 font-size-sm text-muted">
                           58 out of 74 (77%)
@@ -748,14 +837,14 @@ export class ProductDescription extends Component {
                               <div
                                 className="progress-bar bg-success"
                                 role="progressbar"
-                                style={{width: "60%"}}
-                                aria-valuenow={60}
+                                style={{width: `${fifth}%`}}
+                                aria-valuenow={20}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
                               />
                             </div>
                           </div>
-                          <span className="text-muted ml-3">43</span>
+                          <span className="text-muted ml-3">{arr5}</span>
                         </div>
                         <div className="d-flex align-items-center mb-2">
                           <div className="text-nowrap mr-3">
@@ -770,7 +859,7 @@ export class ProductDescription extends Component {
                                 className="progress-bar"
                                 role="progressbar"
                                 style={{
-                                  width: "27%",
+                                  width: `${fourth}%`,
                                   backgroundColor: "#a7e453"
                                 }}
                                 aria-valuenow={27}
@@ -779,7 +868,7 @@ export class ProductDescription extends Component {
                               />
                             </div>
                           </div>
-                          <span className="text-muted ml-3">16</span>
+                          <span className="text-muted ml-3">{arr4}</span>
                         </div>
                         <div className="d-flex align-items-center mb-2">
                           <div className="text-nowrap mr-3">
@@ -794,7 +883,7 @@ export class ProductDescription extends Component {
                                 className="progress-bar"
                                 role="progressbar"
                                 style={{
-                                  width: "17%",
+                                  width: `${third}%`,
                                   backgroundColor: "#ffda75"
                                 }}
                                 aria-valuenow={17}
@@ -803,7 +892,7 @@ export class ProductDescription extends Component {
                               />
                             </div>
                           </div>
-                          <span className="text-muted ml-3">9</span>
+                          <span className="text-muted ml-3">{arr3}</span>
                         </div>
                         <div className="d-flex align-items-center mb-2">
                           <div className="text-nowrap mr-3">
@@ -818,7 +907,7 @@ export class ProductDescription extends Component {
                                 className="progress-bar"
                                 role="progressbar"
                                 style={{
-                                  width: "9%",
+                                  width: `${second}%`,
                                   backgroundColor: "#fea569"
                                 }}
                                 aria-valuenow={9}
@@ -827,7 +916,7 @@ export class ProductDescription extends Component {
                               />
                             </div>
                           </div>
-                          <span className="text-muted ml-3">4</span>
+                          <span className="text-muted ml-3">{arr2}</span>
                         </div>
                         <div className="d-flex align-items-center">
                           <div className="text-nowrap mr-3">
@@ -841,14 +930,14 @@ export class ProductDescription extends Component {
                               <div
                                 className="progress-bar bg-danger"
                                 role="progressbar"
-                                style={{width: "4%"}}
+                                style={{width: `${one}%`}}
                                 aria-valuenow={4}
                                 aria-valuemin={0}
                                 aria-valuemax={100}
                               />
                             </div>
                           </div>
-                          <span className="text-muted ml-3">2</span>
+                          <span className="text-muted ml-3">{arr1}</span>
                         </div>
                       </div>
                     </div>
@@ -867,201 +956,94 @@ export class ProductDescription extends Component {
                             <select
                               className="custom-select custom-select-sm"
                               id="sort-reviews"
+                              onChange={this.sortReview}
                             >
-                              <option>Newest</option>
-                              <option>Oldest</option>
-                              <option>Popular</option>
-                              <option>High rating</option>
-                              <option>Low rating</option>
+                              <option value="newest">Newest</option>
+                              <option value="oldest">Oldest</option>
+                              <option value="popular">Popular</option>
+                              <option value="high-rating">High rating</option>
+                              <option value="low-rating">Low rating</option>
                             </select>
                           </div>
                         </div>
                         {/* Review*/}
-                        <div className="product-review pb-4 mb-4 border-bottom">
-                          <div className="d-flex mb-3">
-                            <div
-                              className="media media-ie-fix align-items-center mr-4 pr-2">
-                              <img
-                                className="rounded-circle"
-                                width={50}
-                                src={img}
-                                alt="Rafael Marquez"
-                              />
-                              <div className="media-body pl-3">
-                                <h6 className="font-size-sm mb-0">Rafael
-                                  Marquez</h6>
-                                <span className="font-size-ms text-muted">
-                          June 28, 2019
+  
+  
+                        <ul style={{listStyle: 'none'}} className="m-0 p-0">
+                          {review.map((rev) => {
+                            const {_id, author, rating, date} = rev
+                            let today = new Date(date)
+                            return (
+                              <li key={_id}>
+                                <div
+                                  className="product-review pb-4 mb-4 border-bottom">
+                                  <div className="d-flex mb-3">
+                                    <div
+                                      className="media media-ie-fix align-items-center mr-4 pr-2">
+                                      <img
+                                        className="rounded-circle"
+                                        width={50}
+                                        src={img}
+                                        alt="Rafael Marquez"
+                                      />
+                                      <div className="media-body pl-3">
+                                        <h6
+                                          className="font-size-sm mb-0">{author}</h6>
+                                        <span
+                                          className="font-size-ms text-muted">
+                          {today.toDateString()}
                         </span>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="star-rating">
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star"/>
-                              </div>
-                              <div className="font-size-ms text-muted">
-                                83% of users found this review helpful
-                              </div>
-                            </div>
-                          </div>
-                          <p className="font-size-md mb-2">
-                            Nam libero tempore, cum soluta nobis est eligendi
-                            optio
-                            cumque nihil impedit quo minus id quod maxime
-                            placeat facere
-                            possimus, omnis voluptas assumenda est...
-                          </p>
-                          <ul className="list-unstyled font-size-ms pt-1">
-                            <li className="mb-1">
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <div className="star-rating">
+                                        <Box component="fieldset" mb={3}
+                                             borderColor="transparent"
+                                             className="mb-0">
+                                          <Rating name="half-rating-read"
+                                                  defaultValue={review.length > 0 ? rating : 0}
+                                                  size="small"
+                                                  precision={0.5} readOnly/>
+                                        </Box>
+                                      </div>
+                                      <div
+                                        className="font-size-ms text-muted">
+                                        83% of users found this review helpful
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <p className="font-size-md mb-2">
+                                    {rev.description}
+                                  </p>
+                                  <ul
+                                    className="list-unstyled font-size-ms pt-1">
+                                    <li className="mb-1">
                               <span
                                 className="font-weight-medium">Pros:&nbsp;</span>
-                              Consequuntur magni, voluptatem sequi, tempora
-                            </li>
-                            <li className="mb-1">
+                                      {rev.pros}
+                                    </li>
+                                    <li className="mb-1">
                               <span
                                 className="font-weight-medium">Cons:&nbsp;</span>
-                              Architecto beatae, quis autem
-                            </li>
-                          </ul>
-                          <div className="text-nowrap">
-                            <button className="btn-like" type="button">
-                              15
-                            </button>
-                            <button className="btn-dislike" type="button">
-                              3
-                            </button>
-                          </div>
-                        </div>
-                        {/* Review*/}
-                        <div className="product-review pb-4 mb-4 border-bottom">
-                          <div className="d-flex mb-3">
-                            <div
-                              className="media media-ie-fix align-items-center mr-4 pr-2">
-                              <img
-                                className="rounded-circle"
-                                width={50}
-                                src={img}
-                                alt="Barbara Palson"
-                              />
-                              <div className="media-body pl-3">
-                                <h6 className="font-size-sm mb-0">Barbara
-                                  Palson</h6>
-                                <span className="font-size-ms text-muted">
-                          May 17, 2019
-                        </span>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="star-rating">
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                              </div>
-                              <div className="font-size-ms text-muted">
-                                99% of users found this review helpful
-                              </div>
-                            </div>
-                          </div>
-                          <p className="font-size-md mb-2">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed
-                            do eiusmod tempor incididunt ut labore et dolore
-                            magna
-                            aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation
-                            ullamco laboris nisi ut aliquip ex ea commodo
-                            consequat.
-                          </p>
-                          <ul className="list-unstyled font-size-ms pt-1">
-                            <li className="mb-1">
-                              <span
-                                className="font-weight-medium">Pros:&nbsp;</span>
-                              Consequuntur magni, voluptatem sequi, tempora
-                            </li>
-                            <li className="mb-1">
-                              <span
-                                className="font-weight-medium">Cons:&nbsp;</span>
-                              Architecto beatae, quis autem
-                            </li>
-                          </ul>
-                          <div className="text-nowrap">
-                            <button className="btn-like" type="button">
-                              34
-                            </button>
-                            <button className="btn-dislike" type="button">
-                              1
-                            </button>
-                          </div>
-                        </div>
-                        {/* Review*/}
-                        <div className="product-review pb-4 mb-4 border-bottom">
-                          <div className="d-flex mb-3">
-                            <div
-                              className="media media-ie-fix align-items-center mr-4 pr-2">
-                              <img
-                                className="rounded-circle"
-                                width={50}
-                                src={img}
-                                alt="Daniel Adams"
-                              />
-                              <div className="media-body pl-3">
-                                <h6 className="font-size-sm mb-0">Daniel
-                                  Adams</h6>
-                                <span className="font-size-ms text-muted">
-                          May 8, 2019
-                        </span>
-                              </div>
-                            </div>
-                            <div>
-                              <div className="star-rating">
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star-filled active"/>
-                                <i className="sr-star czi-star"/>
-                                <i className="sr-star czi-star"/>
-                              </div>
-                              <div className="font-size-ms text-muted">
-                                75% of users found this review helpful
-                              </div>
-                            </div>
-                          </div>
-                          <p className="font-size-md mb-2">
-                            Sed ut perspiciatis unde omnis iste natus error sit
-                            voluptatem accusantium doloremque laudantium, totam
-                            rem
-                            aperiam, eaque ipsa quae ab illo inventore veritatis
-                            et
-                            quasi architecto beatae vitae dicta sunt explicabo.
-                            Nemo
-                            enim ipsam voluptatem.
-                          </p>
-                          <ul className="list-unstyled font-size-ms pt-1">
-                            <li className="mb-1">
-                              <span
-                                className="font-weight-medium">Pros:&nbsp;</span>
-                              Consequuntur magni, voluptatem sequi
-                            </li>
-                            <li className="mb-1">
-                              <span
-                                className="font-weight-medium">Cons:&nbsp;</span>
-                              Architecto beatae, quis autem, voluptatem sequ
-                            </li>
-                          </ul>
-                          <div className="text-nowrap">
-                            <button className="btn-like" type="button">
-                              26
-                            </button>
-                            <button className="btn-dislike" type="button">
-                              9
-                            </button>
-                          </div>
-                        </div>
+                                      {rev.cons}
+                                    </li>
+                                  </ul>
+                                  <div className="text-nowrap">
+                                    <button className="btn-like"
+                                            type="button">
+                                      15
+                                    </button>
+                                    <button className="btn-dislike"
+                                            type="button">
+                                      3
+                                    </button>
+                                  </div>
+                                </div>
+                              </li>
+                            )
+                          })
+                          }
+                        </ul>
                         <div className="text-center">
                           <button className="btn btn-outline-accent"
                                   type="button">
@@ -1085,7 +1067,9 @@ export class ProductDescription extends Component {
                                 className="form-control"
                                 type="text"
                                 required
-                                id="review-name"
+                                id="writeName"
+                                onChange={this.writeName}
+                                value={this.state.author}
                               />
                               <div className="invalid-feedback">
                                 Please enter your name!
@@ -1102,7 +1086,9 @@ export class ProductDescription extends Component {
                                 className="form-control"
                                 type="email"
                                 required
-                                id="review-email"
+                                id="email"
+                                onChange={this.writeEmail}
+                                value={this.state.email}
                               />
                               <div className="invalid-feedback">
                                 Please provide valid email address!
@@ -1118,7 +1104,10 @@ export class ProductDescription extends Component {
                               <select
                                 className="custom-select"
                                 required
-                                id="review-rating"
+                                id="rating"
+                                onChange={this.writeRating}
+                                value={this.state.rating}
+  
                               >
                                 <option value>Choose rating</option>
                                 <option value={5}>5 stars</option>
@@ -1139,8 +1128,9 @@ export class ProductDescription extends Component {
                                 className="form-control"
                                 rows={6}
                                 required
-                                id="review-text"
-                                defaultValue={""}
+                                id="description"
+                                onChange={this.writeDescription}
+                                value={this.state.description}
                               />
                               <div className="invalid-feedback">
                                 Please write a review!
@@ -1155,8 +1145,9 @@ export class ProductDescription extends Component {
                                 className="form-control"
                                 rows={2}
                                 placeholder="Separated by commas"
-                                id="review-pros"
-                                defaultValue={""}
+                                id="pros"
+                                onChange={this.writePros}
+                                value={this.state.pros}
                               />
                             </div>
                             <div className="form-group mb-4">
@@ -1165,13 +1156,15 @@ export class ProductDescription extends Component {
                                 className="form-control"
                                 rows={2}
                                 placeholder="Separated by commas"
-                                id="review-cons"
-                                defaultValue={""}
+                                id="cons"
+                                onChange={this.writeCons}
+                                value={this.state.cons}
                               />
                             </div>
                             <button
                               className="btn btn-primary btn-shadow btn-block"
                               type="submit"
+                              onClick={this.writeReview}
                             >
                               Submit a Review
                             </button>

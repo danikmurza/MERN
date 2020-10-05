@@ -14,6 +14,7 @@ import departments3 from "../css/img/shop/departments/03.jpg"
 import departments4 from "../css/img/shop/departments/04.jpg"
 import departments5 from "../css/img/shop/departments/05.jpg"
 import departments6 from "../css/img/shop/departments/06.jpg"
+import {removeCart} from "../localStorage/local-storage"
 
 
 class Header extends Component {
@@ -26,9 +27,10 @@ class Header extends Component {
     remove: 0
   }
   
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.loggingIn !== this.props.loggingIn) {
-      this.setState({remove: 1})
+      console.log('ComponentDidUpdate')
+      this.setState({data: JSON.parse(localStorage.getItem('user'))})
     }
   }
   
@@ -43,21 +45,11 @@ class Header extends Component {
     dispatch(filters.filterByValue(this.state.input))
   }
   
-  removeCart = (e) => {
-    let products = this.state.cart.filter(product => product._id !== e.currentTarget.value)
-    localStorage.setItem('products', JSON.stringify(products))
-    this.setState({cart: JSON.parse(localStorage.getItem('products'))})
-  }
-  
   render() {
     let {data, cart, wishlist, compare} = this.state
     let summa = 0
     if (cart) {
-      let sum = []
-      cart.map((a) => sum.push(a.price))
-      summa = cart.map((a) => a.price * a.count)
-        .reduce((a, b) => a + b, 0)
-        .toFixed(2)
+      summa = cart.reduce((sum, item) => sum + (item.price * item.count), 0).toFixed(2)
     }
     
     
@@ -69,7 +61,7 @@ class Header extends Component {
               <div className="topbar-text dropdown disable-autohide">
                 <a
                   className="topbar-link dropdown-toggle"
-                  href="#"
+                  href="/"
                   data-toggle="dropdown"
                 >
                   <img
@@ -90,7 +82,7 @@ class Header extends Component {
                     </select>
                   </li>
                   <li>
-                    <a className="dropdown-item pb-1" href="#">
+                    <a className="dropdown-item pb-1" href="/">
                       <img
                         className="mr-2"
                         width={20}
@@ -101,7 +93,7 @@ class Header extends Component {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item pb-1" href="#">
+                    <a className="dropdown-item pb-1" href="/">
                       <img
                         className="mr-2"
                         width={20}
@@ -112,7 +104,7 @@ class Header extends Component {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="/">
                       <img
                         className="mr-2"
                         width={20}
@@ -135,7 +127,7 @@ class Header extends Component {
             <div className="topbar-text dropdown d-md-none ml-auto">
               <a
                 className="topbar-link dropdown-toggle"
-                href="#"
+                href="/"
                 data-toggle="dropdown"
               >
                 Wishlist / Compare / Track
@@ -186,7 +178,6 @@ class Header extends Component {
             </div>
           </div>
         </div>
-        ;
         
         
         {/* Remove "navbar-sticky" class to make navigation bar scrollable with the page.*/}
@@ -237,7 +228,7 @@ class Header extends Component {
                   </div>
                 </Link>
                 <Link className="navbar-tool ml-1 ml-lg-0 mr-n1 mr-lg-2"
-                      to="/my_account"
+                      to={data ? "/account_orders" : "/my_account"}
                       data-toggle="modal">
                   <div className="navbar-tool-icon-box">
                     <i className="navbar-tool-icon czi-user"/>
@@ -281,7 +272,8 @@ class Header extends Component {
                                         type="button"
                                         aria-label="Remove"
                                         value={product._id}
-                                        onClick={this.removeCart}
+                                        id="products"
+                                        onClick={(e) => this.setState({cart: removeCart(e)})}
                                       >
                                         <span aria-hidden="true">×</span>
                                       </button>
@@ -568,38 +560,38 @@ class Header extends Component {
                       Shop
                     </Link>
                   </li>
-                  
-                  {data &&
-                  
-                  <li className="nav-item dropdown">
-                    <Link className="nav-link dropdown-toggle"
-                          to="/account_orders"
-                          data-toggle="dropdown">
-                      Account
-                    </Link>
-                    <ul className="dropdown-menu">
-                      <li className="dropdown">
-                        <Link className="dropdown-item dropdown-toggle"
-                              to="/account_orders"
-                              data-toggle="dropdown">
-                          Shop User Account
-                        </Link>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <Link className="dropdown-item"
-                                  to="/account_orders">
-                              Orders History
-                            </Link>
-                          </li>
-                          <li>
-                            <Link className="dropdown-item"
-                                  to="/account_profile">
-                              Profile Settings
-                            </Link>
-                          </li>
-                          <li>
-                            <Link
-                              className="dropdown-item"
+  
+                  {data ?
+    
+                    <li className="nav-item dropdown">
+                      <Link className="nav-link dropdown-toggle"
+                            to="/account_orders"
+                            data-toggle="dropdown">
+                        Account
+                      </Link>
+                      <ul className="dropdown-menu">
+                        <li className="dropdown">
+                          <Link className="dropdown-item dropdown-toggle"
+                                to="/account_orders"
+                                data-toggle="dropdown">
+                            Shop User Account
+                          </Link>
+                          <ul className="dropdown-menu">
+                            <li>
+                              <Link className="dropdown-item"
+                                    to="/account_orders">
+                                Orders History
+                              </Link>
+                            </li>
+                            <li>
+                              <Link className="dropdown-item"
+                                    to="/account_profile">
+                                Profile Settings
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                className="dropdown-item"
                               to="/account_address">
                               Account Addresses
                             </Link>
@@ -623,28 +615,28 @@ class Header extends Component {
                               My Tickets
                             </Link>
                           </li>
-                          <li>
-                            <Link className="dropdown-item"
-                                  to="/account_single_ticket">
-                              Single Ticket
-                            </Link>
-                          </li>
-                        </ul>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/my_account">
-                          Sign In / Sign Up
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item"
-                              to="/recovery_password">
-                          Password Recovery
-                        </Link>
-                      </li>
-                    </ul>
-                  </li>
-                  
+                            <li>
+                              <Link className="dropdown-item"
+                                    to="/account_single_ticket">
+                                Single Ticket
+                              </Link>
+                            </li>
+                          </ul>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/my_account">
+                            Sign In / Sign Up
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item"
+                                to="/recovery_password">
+                            Password Recovery
+                          </Link>
+                        </li>
+                      </ul>
+                    </li>
+                    : null
                   }
                   
                   
@@ -705,6 +697,7 @@ class Header extends Component {
             </div>
           </div>
         </div>
+        {/*<ModalLogin/>*/}
       </header>
     )
   }

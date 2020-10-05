@@ -21,12 +21,6 @@ const updateProductList = (state, action) => {
         loading: false,
         error: null
       }
-    case 'LOAD_NEW_PAGE':
-      return {
-        products: action.payload,
-        loading: false,
-        error: null
-      }
     case 'SORT_PRODUCTS_PRICE':
       const sortProductsPrice = state.productList.products.sort((a, b) => a.price - b.price)
       return {
@@ -84,7 +78,7 @@ const updateProductList = (state, action) => {
       return {
         products: [],
         loading: false,
-        error: action.payload
+        error: action.error
       }
     case 'PRODUCT_DESCRIPTION':
       const pro = state.productList.products.filter(product => product._id === action.payload)

@@ -1,18 +1,13 @@
 import React, {Component} from 'react'
 import {Link} from "react-router-dom";
+import {removeCart} from "../localStorage/local-storage";
 
 export class YourCart extends Component {
   state = {
     cart: JSON.parse(localStorage.getItem('products')),
     summa: 0
   }
-  removeCart = (e) => {
-    e.preventDefault()
-    let storageProducts = JSON.parse(localStorage.getItem('products'));
-    let products = storageProducts.filter(product => product._id !== e.currentTarget.value);
-    localStorage.setItem('products', JSON.stringify(products));
-    this.setState({cart: JSON.parse(localStorage.getItem('products'))})
-  }
+  
   updateCart = () => {
     this.setState({cart: JSON.parse(localStorage.getItem('products'))})
   }
@@ -130,7 +125,8 @@ export class YourCart extends Component {
                             <button className="btn btn-link px-0 text-danger"
                                     type="button"
                                     value={product._id}
-                                    onClick={this.removeCart}>
+                                    id="products"
+                                    onClick={(e) => this.setState({cart: removeCart(e)})}>
                               <i className="czi-close-circle mr-2"/>
                               <span className="font-size-sm">Remove</span>
                             </button>
@@ -179,7 +175,7 @@ export class YourCart extends Component {
                     <div className="card-header">
                       <h3 className="accordion-heading">
                         <Link
-                          to="/"
+                          to="/your_cart"
                           role="button"
                           data-toggle="collapse"
                           aria-expanded="true"
@@ -214,6 +210,7 @@ export class YourCart extends Component {
                         <button
                           className="btn btn-outline-primary btn-block"
                           type="submit"
+                          // onClick={(e)=> {e.preventDefault(), console.log('Apply promo code')}}
                         >
                           Apply promo code
                         </button>

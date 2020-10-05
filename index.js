@@ -4,17 +4,18 @@ const config = require('config')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
+
 const app = express()
 
 app.use(cors())
-app.use(express.json({ extended: true }))
+app.use(express.json())
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static(path.join(__dirname, 'client')))
-app.use(express.urlencoded({extended: true}))
 
-app.use('/home', require('./routes/home'))
+app.use('/api/ticket', require('./routes/ticket'))
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/product', require('./routes/products'))
+
 
 const PORT = config.get('port') || 5000
 

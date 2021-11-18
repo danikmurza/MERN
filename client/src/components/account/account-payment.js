@@ -7,7 +7,7 @@ import {userAction} from "../../actions"
 import cards from '../css/img/cards.png'
 import {ID} from '../localStorage/local-storage'
 
-export const AccountPayment = () => {
+const AccountPayment = () => {
   const [show, setShow] = useState('none')
   const [cardNumber, setCardNumber] = useState('')
   const [fullName, setFullName] = useState('')
@@ -31,7 +31,8 @@ export const AccountPayment = () => {
   
   
   return (
-    <div>
+    
+    <>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
         <div
@@ -114,7 +115,7 @@ export const AccountPayment = () => {
                     <i className="czi-heart opacity-60 mr-2"/>
                     Wishlist
                     <span
-                      className="font-size-sm text-muted ml-auto">{wishlist.length > 0 ? wishlist.length : 0}</span>
+                      className="font-size-sm text-muted ml-auto">{wishlist ? wishlist.length : 0}</span>
                   </Link>
                 </li>
                 <li className="mb-0">
@@ -201,7 +202,7 @@ export const AccountPayment = () => {
                 </thead>
                 <tbody>
                 {
-                  payments.length > 0 ? payments.map((payment, index) => {
+                  payments ? payments.map((payment, index) => {
                       const {cartNumber, fullName, date, card} = payment
                       return (
                         <tr key={index}>
@@ -399,7 +400,9 @@ export const AccountPayment = () => {
         </div>
       </div>
     
-    </div>
+    </>
   )
   
 }
+
+export default AccountPayment

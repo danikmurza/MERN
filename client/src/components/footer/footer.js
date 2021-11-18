@@ -7,7 +7,7 @@ import it from "../css/img/flags/it.png"
 import paymentCard from "../css/img/cards-alt.png"
 
 
-export const Footer = () => {
+const Footer = () => {
   return (
     <footer className="bg-dark pt-5">
       <div className="container">
@@ -443,3 +443,4 @@ export const Footer = () => {
     </footer>
   )
 }
+export default  Footer

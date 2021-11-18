@@ -5,6 +5,7 @@ import {userAction} from "../../actions"
 import {connect} from 'react-redux'
 
 class AccountOrders extends Component {
+  
   state = {
     show: 'none',
     orders: JSON.parse(localStorage.getItem('user')).user.orders,
@@ -31,7 +32,7 @@ class AccountOrders extends Component {
   render() {
     const {orderNumber, total, cart, show, orders, user, wishlist} = this.state
     return (
-      <div>
+      <>
         {/* Page Title*/}
         <div className="page-title-overlap bg-dark pt-4">
           <div
@@ -225,10 +226,10 @@ class AccountOrders extends Component {
                               className="nav-link-style font-weight-medium font-size-sm pl-0"
                               style={{backgroundColor: 'white', border: 'none'}}
                               data-toggle="modal"
-                              value={order.orderNumber}
+                              value={order !== null ? order.orderNumber: null}
                               onClick={(e) => this.openList(e)}
                             >
-                              {order.orderNumber}
+                              {order !== null ? order.orderNumber: null}
                             </button>
                           </td>
                           <td
@@ -361,7 +362,7 @@ class AccountOrders extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
   

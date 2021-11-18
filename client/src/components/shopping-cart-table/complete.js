@@ -2,7 +2,7 @@ import React from 'react'
 import {Link} from "react-router-dom";
 
 
-export const Complete = () => {
+const Complete = () => {
   return (
     <div className="container pb-5 mb-sm-4">
       <div className="pt-5">
@@ -34,3 +34,5 @@ export const Complete = () => {
     </div>
   )
 }
+
+export default Complete

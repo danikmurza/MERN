@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Error404 = () => {
+const Error404 = () => {
   
   return (
     <div className="container py-5 mb-lg-3">
@@ -73,3 +73,5 @@ export const Error404 = () => {
     </div>
   )
 }
+
+export default Error404

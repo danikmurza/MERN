@@ -8,9 +8,9 @@ import widget4 from '../css/img/shop/cart/widget/04.jpg'
 import {Link} from "react-router-dom";
 
 
-export const Payments = () => {
+const Payments = () => {
   return (
-    <div>
+    <>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
         <div
@@ -452,6 +452,8 @@ export const Payments = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+
+export default Payments

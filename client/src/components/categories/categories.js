@@ -19,9 +19,9 @@ import brands11 from '../css/img/shop/brands/11.png'
 import brands12 from '../css/img/shop/brands/12.png'
 
 
-export const Categories = () => {
+const Categories = () => {
   return (
-    <div>
+    <>
       {/* Page Title (Light)*/}
       <div className="bg-secondary py-4">
         <div
@@ -700,6 +700,7 @@ export const Categories = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+export default Categories

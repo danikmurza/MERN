@@ -26,7 +26,7 @@ class MyAccount extends React.Component {
     const {email, password} = this.state
     const {dispatch} = this.props
     if (email && password) {
-      dispatch(userAction.login(email, password))
+      dispatch(userAction.myAccount(this.state, "login"))
     }
   }
   
@@ -37,15 +37,8 @@ class MyAccount extends React.Component {
       this.setState({show: true, text: "Passwords Don't Match"})
     }
     if (this.state.email && this.state.password === this.state.confirmPassword) {
-      this.props.dispatch(userAction.register(
-        this.state.email,
-        this.state.password,
-        this.state.firstName,
-        this.state.lastName,
-        this.state.phoneNumber,
-        this.state.jwtQuestion,
-        this.state.jwtSecret
-      ))
+      
+      this.props.dispatch(userAction.myAccount(this.state, "register"))
     }
   }
   

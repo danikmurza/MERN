@@ -6,14 +6,14 @@ import {addProduct, ratings} from "../localStorage/local-storage";
 
 
 const ProductsGridItem = ({product, productDescription}) => {
-  const {name, price, img, count, review} = product
+  const {name, price, img, count, reviews} = product
   
   const [show, setShow] = useState('none')
   const closedModel = () => {
     setShow('none')
   }
   return (
-    <div>
+    <>
       <div className="card product-card">
         <button className="btn-wishlist btn-sm"
                 type="button"
@@ -55,7 +55,7 @@ const ProductsGridItem = ({product, productDescription}) => {
             </div>
             <Box component="fieldset" mb={3} borderColor="transparent">
               <Rating name="half-rating-read"
-                      defaultValue={review.length > 0 ? ratings(review) : 0}
+                      defaultValue={reviews.length > 0 ? ratings(reviews) : 0}
                       size="small"
                       precision={0.5} readOnly/>
             </Box>
@@ -94,7 +94,7 @@ const ProductsGridItem = ({product, productDescription}) => {
                     product={product}
                     productDescription={productDescription}
       />
-    </div>
+    </>
   )
 }
 

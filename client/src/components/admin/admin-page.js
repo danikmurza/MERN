@@ -4,8 +4,13 @@ import {userAction} from '../../actions'
 
 class AllUser extends React.Component {
   
+  // state = {
+  //   user: JSON.parse(localStorage.getItem('user').user),
+  //   _id:''
+  // }
+  
   componentDidMount = () => {
-    this.props.dispatch(userAction.getAll())
+    // this.props.dispatch(userAction.myAccount(this.state._id))
   }
   
   
@@ -16,7 +21,7 @@ class AllUser extends React.Component {
   }
   
   Show = () => {
-    this.props.dispatch(userAction.getAll())
+    // this.props.dispatch(userAction.myAccount(this.state._id))
   }
   
   render() {
@@ -37,18 +42,18 @@ class AllUser extends React.Component {
       )
       
       return (
-        <div>
+        <>
           <h1>Admin page</h1>
           <ul style={{listStyle: "none"}}>
             {listUsers}
           </ul>
-        </div>
+        </>
       )
     }
     return (
-      <div>Hi
+      <>
         <button onClick={this.Show}>Button</button>
-      </div>
+      </>
     )
   }
 }

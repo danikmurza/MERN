@@ -8,14 +8,9 @@ import {addProduct, ratings} from "../localStorage/local-storage"
 
 export const ModalProduct = ({show, closedModal, product, productDescription}) => {
   
-  const [image, setImage] = useState({
-    img: 'active',
-    img2: '',
-    img3: '',
-    img4: ''
-  })
+  const [image, setImage] = useState({img: 'active', img2: '', img3: '', img4: ''})
   
-  const {name, brand, price, img, review} = product
+  const {name, brand, price, img, reviews} = product
   
   return (
     <div className="modal-quick-view modal fade show"
@@ -166,11 +161,11 @@ export const ModalProduct = ({show, closedModal, product, productDescription}) =
                              borderColor="transparent">
                           <Rating name="half-rating-read"
                                   size="small"
-                                  defaultValue={review.length > 0 ? ratings(review) : 0}
+                                  defaultValue={reviews.length > 0 ? ratings(reviews) : 0}
                                   precision={0.5} readOnly/>
                           <span
                             className="d-inline-block font-size-sm text-body align-middle  ml-3 mb-2">
-                    {review.length} Reviews
+                    {reviews.length} Reviews
                   </span>
                         </Box>
                       </div>

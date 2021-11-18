@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {productAddAction} from '../../actions'
+import {filters} from '../../actions'
 import Spinner from "../spinner";
 import ErrorIndicator from "../error-indicator";
 
@@ -18,25 +18,16 @@ class AddProduct extends Component {
   }
   
   componentDidMount() {
-    this.props.dispatch(productAddAction.getAll())
-    
+  
   }
   
   onSubmits = (e) => {
     const {name, brand, specification, price, count, img, type} = this.state
     e.preventDefault()
-    this.props.dispatch(productAddAction.productAdd(
-      name, brand, specification, price, count, img, type
-    ))
-    this.setState({
-      name: '',
-      brand: '',
-      specification: '',
-      price: 0,
-      count: 0,
-      img: '',
-      type: ''
-    })
+    const url = "add"
+    const body ={name, brand, specification, price, count, img, type, url}
+    this.props.dispatch(filters.product(body))
+    this.setState({name: '', brand: '', specification: '', price: 0, count: 0, img: '', type: ''})
   }
   
   render() {

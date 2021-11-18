@@ -1,9 +1,12 @@
-const productsRequested = () => {
+import {productService} from "../service/product-service"
+
+
+const requested = () => {
   return {
     type: 'FETCH_PRODUCTS_REQUEST'
   }
 }
-const productsLoaded = (newProducts) => {
+const loaded = (newProducts) => {
   return {
     type: 'FETCH_PRODUCTS_SUCCESS',
     payload: newProducts
@@ -41,32 +44,58 @@ const filterByValue = (products) => {
     payload: products,
   }
 }
-const productsError = (error) => {
+const Error = (error) => {
   return {
     type: 'FETCH_PRODUCTS_FAILURE',
     payload: error
   }
 }
 
-export function fetchProducts() {
+export const fetchProducts = () => {
   return async dispatch => {
-    dispatch(productsRequested())
-    await fetch('http://localhost:5000/api/product')
+    dispatch(requested())
+    await fetch('http://74.208.89.79/products', requestOptions)
       .then(res => res.json())
       .then(res => {
-        if (res.error) {
-          throw(res.error)
-        }
-        dispatch(productsLoaded(res))
+        console.log(res)
+        dispatch(loaded(res))
         return res
       })
       .catch(error => {
-        dispatch(productsError(error))
+        dispatch(Error(error))
       })
   }
 }
 
+
+const requestOptions = {
+  method: "GET",
+  headers: {'Content-Type': 'application/json'}
+}
+
+// export const fetchProducts = () => {
+//   return async dispatch => {
+//     dispatch(requested())
+//
+//     productService.getAll()
+//         .then(user => {dispatch(loaded(user))},
+//             error => {dispatch(Error(error))}
+//         )
+//   }
+// }
+const  product = (body) => {
+  return dispatch => {
+    dispatch(requested())
+    
+    productService.product(body)
+      .then(user => {dispatch(loaded(user))},
+        error => {dispatch(Error(error))}
+      )
+  }
+}
+
 export const filters = {
-  filterByValue
+  filterByValue,
+  product
 }
 

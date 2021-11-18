@@ -19,16 +19,20 @@ const Review = (props) => {
   
   const buy = () => {
     let status = 'InProgress'
-    let obj = {orderNumber: ID(), date: new Date(), status, total: summa, cart}
+    let orders = {orderNumber: ID(), date: new Date(), status, total: summa, cart}
     let one = JSON.parse(localStorage.getItem('user')).user
-    console.log(ID())
-    props.dispatch(userAction.orders(one._id, obj))
+    let url = "orders"
+    let body = {_id: one._id, url: url, orders}
+      props.dispatch(userAction.myAccount(body, "update"))
     localStorage.removeItem('products')
     setCart(JSON.parse(localStorage.getItem('products')))
+    alert('Choose the product')
     props.history.push('/complete')
+    
   }
+  
   return (
-    <div>
+    <>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
         <div
@@ -312,7 +316,7 @@ const Review = (props) => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
 export default connect(null, null)(Review)

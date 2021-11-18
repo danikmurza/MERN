@@ -13,7 +13,7 @@ import about4 from '../css/img/about/04.jpg'
 import about5 from '../css/img/about/05.jpg'
 
 
-export const AboutPage = () => {
+const AboutPage = () => {
   
   return (
     <main className="container-fluid px-0">
@@ -347,3 +347,5 @@ export const AboutPage = () => {
   )
   
 }
+
+export default AboutPage

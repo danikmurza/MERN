@@ -6,7 +6,7 @@ import Link from "@material-ui/core/Link"
 import Box from "@material-ui/core/Box"
 import Rating from "@material-ui/lab/Rating"
 import {addProduct, ratings} from '../localStorage/local-storage'
-import {productAddAction} from "../../actions";
+import {filters} from "../../actions";
 
 
 export class ProductDescription extends Component {
@@ -30,46 +30,14 @@ export class ProductDescription extends Component {
     
   }
   
-  writeName = (e) => {
-    e.preventDefault()
-    this.setState({author: e.target.value})
-  }
-  writeEmail = (e) => {
-    e.preventDefault()
-    this.setState({email: e.target.value})
-  }
-  writeRating = (e) => {
-    e.preventDefault()
-    this.setState({rating: e.target.value})
-    
-  }
-  writeDescription = (e) => {
-    e.preventDefault()
-    this.setState({description: e.target.value})
-  }
-  writePros = (e) => {
-    e.preventDefault()
-    this.setState({pros: e.target.value})
-  }
-  writeCons = (e) => {
-    e.preventDefault()
-    this.setState({cons: e.target.value})
-  }
   writeReview = (e) => {
     e.preventDefault()
     const {_id} = this.props.products[0]
     const {author, email, rating, description, pros, cons} = this.state
-    this.props.dispatch(productAddAction.reviewAdd(_id, {
-      author, email, rating, description, pros, cons
-    }))
-    this.setState({
-      author: '',
-      email: '',
-      rating: 'Choose rating',
-      description: '',
-      pros: '',
-      cons: ''
-    })
+    const url = "review"
+    const body = {_id, review: { author, email, rating, description, pros, cons}, url}
+    this.props.dispatch(filters.product(body))
+    this.setState({author: '', email: '', rating: 'Choose rating', description: '', pros: '', cons: ''})
   }
   
   sortReview = (e) => {
@@ -98,7 +66,6 @@ export class ProductDescription extends Component {
     
     const {products, loading, error} = this.props
     const {general, techSpecs, rev, image1, image2, image3, image4} = this.state
-    
     if (loading) {
       return <Spinner/>
     }
@@ -108,7 +75,7 @@ export class ProductDescription extends Component {
     if (products) {
   
       const {_id, name, price, img, count, review, brand, specification} = products[0]
-      let fifth, fourth, third, second, one = 0;
+      let fifth, fourth, third, second, one;
   
       let arr5 = review.filter((item) => item.rating === 5).length
       let arr4 = review.filter((item) => item.rating === 4).length
@@ -124,7 +91,7 @@ export class ProductDescription extends Component {
       one = arr1 * proc
   
       return (
-        <div>
+        <>
           <div className="page-title-overlap bg-dark pt-4">
             <div
               className="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -1068,7 +1035,7 @@ export class ProductDescription extends Component {
                                 type="text"
                                 required
                                 id="writeName"
-                                onChange={this.writeName}
+                                onChange={(e)=> this.setState({author: e.target.value})}
                                 value={this.state.author}
                               />
                               <div className="invalid-feedback">
@@ -1087,7 +1054,7 @@ export class ProductDescription extends Component {
                                 type="email"
                                 required
                                 id="email"
-                                onChange={this.writeEmail}
+                                onChange={(e)=> this.setState({email: e.target.value})}
                                 value={this.state.email}
                               />
                               <div className="invalid-feedback">
@@ -1105,7 +1072,7 @@ export class ProductDescription extends Component {
                                 className="custom-select"
                                 required
                                 id="rating"
-                                onChange={this.writeRating}
+                                onChange={(e)=> this.setState({rating: e.target.value})}
                                 value={this.state.rating}
   
                               >
@@ -1129,7 +1096,7 @@ export class ProductDescription extends Component {
                                 rows={6}
                                 required
                                 id="description"
-                                onChange={this.writeDescription}
+                                onChange={(e)=> this.setState({description: e.target.value})}
                                 value={this.state.description}
                               />
                               <div className="invalid-feedback">
@@ -1146,7 +1113,7 @@ export class ProductDescription extends Component {
                                 rows={2}
                                 placeholder="Separated by commas"
                                 id="pros"
-                                onChange={this.writePros}
+                                onChange={(e)=> this.setState({pros: e.target.value})}
                                 value={this.state.pros}
                               />
                             </div>
@@ -1157,7 +1124,7 @@ export class ProductDescription extends Component {
                                 rows={2}
                                 placeholder="Separated by commas"
                                 id="cons"
-                                onChange={this.writeCons}
+                                onChange={(e)=> this.setState({cons: e.target.value})}
                                 value={this.state.cons}
                               />
                             </div>
@@ -1192,7 +1159,7 @@ export class ProductDescription extends Component {
           </div>
           <hr className="pb-5"/>
           {/* Product carousel (You may also like)*/}
-        </div>
+        </>
       )
     }
   }

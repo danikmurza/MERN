@@ -2,8 +2,6 @@ import React, {Component} from 'react'
 import {bindActionCreators} from "redux";
 import {connect} from 'react-redux'
 import {productAddedToCart, fetchProducts} from "../../actions";
-import {compose} from "../../utils";
-import {withProductStoreService} from "../hoc";
 import Spinner from "../spinner"
 import ErrorIndicator from "../error-indicator"
 
@@ -51,7 +49,9 @@ import catalog64 from "../css/img/shop/catalog/64.jpg"
 import catalog65 from "../css/img/shop/catalog/65.jpg"
 
 
-const Home = ({products, onAddedToCart}) => {
+const Home = (
+    // {products, onAddedToCart}
+    ) => {
   
   return (
     <div>
@@ -1433,7 +1433,4 @@ const mapDispatchToProps = dispatch => {
   }, dispatch)
 };
 
-export default compose(
-  withProductStoreService(),
-  connect(mapStateToProps, mapDispatchToProps)
-)(HomePage)
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage)

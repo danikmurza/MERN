@@ -18,7 +18,7 @@ const ProductsListItem = ({product, productDescription}) => {
   }
   
   return (
-    <div>
+    <>
       <div className="card product-card product-list">
         <button className="btn-wishlist btn-sm"
                 type="button"
@@ -96,7 +96,7 @@ const ProductsListItem = ({product, productDescription}) => {
         product={product}
         productDescription={productDescription}
       />
-    </div>
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const SubmitRequest = () => {
+const SubmitRequest = () => {
   return (
-    <div>
+    <>
       {/* Page Title (Light)*/}
       <div className="bg-secondary py-4">
         <div
@@ -290,6 +290,9 @@ export const SubmitRequest = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+
+
+export default SubmitRequest

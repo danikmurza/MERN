@@ -21,21 +21,13 @@ class AccountTickets extends Component {
   submitNewTicket = () => {
     const {userId, subject, type, priority, description, status} = this.state
     this.props.dispatch(userAction.ticket(userId, subject, type, priority, description, status))
-    this.setState({
-      show: 'none',
-      userId: '',
-      subject: '',
-      type: '',
-      description: [],
-      priority: '',
-      status: ''
-    })
+    this.setState({show: 'none', userId: '', subject: '', type: '', description: [], priority: '', status: ''})
   }
   
   render() {
     const {show, tickets, user, wishlist} = this.state
     return (
-      <div>
+      <>
         {/* Page Title*/}
         <div className="page-title-overlap bg-dark pt-4">
           <div
@@ -408,7 +400,7 @@ class AccountTickets extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
   

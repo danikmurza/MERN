@@ -4,9 +4,9 @@ import orlando from "../css/img/contacts/orlando.jpg"
 import chicago from "../css/img/contacts/chicago.jpg"
 import newYork from "../css/img/contacts/newyork.jpg"
 
-export const Contacts = () => {
+const Contacts = () => {
   return (
-    <div>
+    <>
       {/* Page Title (Light)*/}
       <div className="bg-secondary py-4">
         <div
@@ -369,6 +369,7 @@ export const Contacts = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+export default Contacts

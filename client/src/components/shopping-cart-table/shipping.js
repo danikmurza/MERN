@@ -6,7 +6,7 @@ import widget3 from '../css/img/shop/cart/widget/03.jpg'
 import widget4 from '../css/img/shop/cart/widget/04.jpg'
 import {Link} from "react-router-dom";
 
-export const Shipping = () => {
+const Shipping = () => {
   return (<div>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
@@ -523,3 +523,5 @@ export const Shipping = () => {
     </div>
   )
 }
+
+export default Shipping

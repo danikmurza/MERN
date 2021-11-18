@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import {removeCart} from "../localStorage/local-storage";
 
 
-export const Comparison = () => {
+ const Comparison = () => {
   const [compare, setCompare] = useState(JSON.parse(localStorage.getItem('compare')))
   
   if (compare) {
     return (
-      <div>
+      <>
         {/* Page Title (Dark)*/}
         <div className="bg-dark py-4">
           <div
@@ -755,12 +755,13 @@ export const Comparison = () => {
           </div>
         </div>
         {/* Footer*/}
-      </div>
+      </>
     )
   }
   if (!compare) {
     return (
-      <div></div>
+      <></>
     )
   }
 }
+export default Comparison

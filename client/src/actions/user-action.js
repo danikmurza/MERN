@@ -22,43 +22,11 @@ function failure(error) {
 }
 
 
-function login(email, password) {
-  return dispatch => {
-    dispatch(request({email}))
-    
-    userService.login(email, password)
-      .then(
-        user => {
-          dispatch(success(user))
-        },
-        error => {
-          dispatch(failure(error))
-        }
-      )
-  }
-}
-
-function register(email, password, firstName, lastName, phoneNumber, jwtQuestion, jwtSecret) {
-  return dispatch => {
-    dispatch(request({email}))
-    
-    userService.register(email, password, firstName, lastName, phoneNumber, jwtQuestion, jwtSecret)
-      .then(
-        user => {
-          dispatch(success(user))
-        },
-        error => {
-          dispatch(failure(error))
-        }
-      )
-  }
-}
-
-function avatar(data) {
+function myAccount(body, url) {
   return dispatch => {
     dispatch(request())
     
-    userService.uploadAvatar(data)
+    userService.myAccount(body, url)
       .then(
         user => {
           dispatch(success(user))
@@ -70,43 +38,13 @@ function avatar(data) {
   }
 }
 
-function updateProfile(_id, firstName, lastName, password, phoneNumber) {
+function avatar(body) {
   return dispatch => {
-    dispatch(request({_id}))
+    dispatch(request())
     
-    userService.updateProfile(_id, firstName, lastName, password, phoneNumber)
+    userService.uploadAvatar(body)
       .then(
         user => {
-          dispatch(success(user))
-        },
-        error => {
-          dispatch(failure(error))
-        }
-      )
-  }
-}
-
-const address = (_id, address, action) => {
-  return async dispatch => {
-    dispatch(request(_id))
-    
-    await userService.address(_id, address, action)
-      .then(user => {
-          dispatch(success(user))
-        },
-        error => {
-          dispatch(failure(error))
-        }
-      )
-  }
-}
-
-const orders = (_id, orders) => {
-  return async dispatch => {
-    dispatch(request(_id))
-    
-    await userService.orders(_id, orders)
-      .then(user => {
           dispatch(success(user))
         },
         error => {
@@ -133,6 +71,7 @@ const ticket = (userId, subject, type, priority, description, status) => {
 
 function logout() {
   userService.logout()
+  document.location.reload()
   return {
     type: 'USERS_LOGOUT'
   }
@@ -164,14 +103,10 @@ function deleteUser(_id) {
 
 
 export const userAction = {
-  login,
   logout,
   getAll,
-  register,
+  myAccount,
   deleteUser,
-  updateProfile,
-  address,
-  orders,
   ticket,
   avatar
 }

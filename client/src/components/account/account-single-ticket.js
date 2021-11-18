@@ -5,10 +5,10 @@ import testimonials4 from "../css/img/testimonials/04.jpg"
 import {Link} from "react-router-dom";
 import {userAction} from "../../actions";
 
-export const AccountSingleTicket = () => {
+const AccountSingleTicket = () => {
   
   return (
-    <div>
+    <>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
         <div
@@ -314,7 +314,8 @@ export const AccountSingleTicket = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
   
 }
+export default AccountSingleTicket

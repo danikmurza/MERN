@@ -1,9 +1,9 @@
 import React from 'react'
 import helpArticle from '../css/img/pages/help-article.jpg'
 
-export const HelpSingleTopic = () => {
+const HelpSingleTopic = () => {
   return (
-    <div>
+    <>
       {/* Page Title (Light)*/}
       <div className="bg-secondary py-4">
         <div
@@ -389,6 +389,8 @@ export const HelpSingleTopic = () => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+
+export default HelpSingleTopic

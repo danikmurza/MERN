@@ -1,6 +1,9 @@
 {
   "port": 5000,
   "jwtSecret": "Danik",
-  "mongoUri": "mongodb+srv://mdanik:Agamyanrafael1@cluster0-kdnmn.mongodb.net/profile",
-  "baseUrl": "http://localhost:5000"
+  "mongoUri": "mongodb+srv://mdanik:Agamyanrafael1@cluster0-kdnmn.mongodb.net/roadservice",
+  "baseUrl": "http://localhost:5000",
+  "emailSender": "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",
+  "email": "daniyarmurza@gmail.com",
+  "ema": "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"
 }

@@ -1,8 +1,8 @@
 import React from 'react'
 
-export const HelpTopics = () => {
+const HelpTopics = () => {
   return (
-    <div>
+    <>
       {/* Hero section with search*/}
       <section
         className="bg-dark bg-size-cover bg-position-center-x position-relative py-5 mb-5"
@@ -268,6 +268,8 @@ export const HelpTopics = () => {
         </p>
       </section>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
+
+export default HelpTopics

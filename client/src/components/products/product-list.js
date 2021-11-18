@@ -14,8 +14,7 @@ export class ProductList extends Component {
   state = {
     valuePrice: [0, 1000],
     list: false,
-    buttonGrid: "btn btn-icon nav-link-style bg-light text-dark disabled" +
-      " opacity-100",
+    buttonGrid: "btn btn-icon nav-link-style bg-light text-dark disabled opacity-100",
     buttonList: "btn btn-icon nav-link-style nav-link-light"
   }
   
@@ -33,7 +32,7 @@ export class ProductList extends Component {
     const {list, buttonGrid, buttonList} = this.state
 
     return (
-      <div>
+      <>
         <div className="page-title-overlap bg-dark pt-4">
           <div
             className="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -1367,7 +1366,7 @@ export class ProductList extends Component {
             </section>
           </div>
         </div>
-      </div>
+      </>
     )
   }
   

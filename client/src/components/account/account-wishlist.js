@@ -15,7 +15,7 @@ const AccountWishlist = (props) => {
     props.history.push('/shop')
   }
   return (
-    <div>
+    <>
       {/* Page Title*/}
       <div className="page-title-overlap bg-dark pt-4">
         <div
@@ -228,7 +228,7 @@ const AccountWishlist = (props) => {
         </div>
       </div>
       {/* Footer*/}
-    </div>
+    </>
   )
 }
 

@@ -37,7 +37,6 @@ class Products extends Component {
     if ('low-high' === e.target.value) {
       dispatch(sortProductPrice())
       this.setState({update: 1})
-  
     }
     if ('high-low' === e.target.value) {
       dispatch(reverseProductPrice())
@@ -61,7 +60,6 @@ class Products extends Component {
   
   productDescription = (e) => {
     this.props.dispatch(productDescription(e.currentTarget.value))
-    // localStorage.setItem('id', JSON.stringify( e.currentTarget.value))
     this.props.history.push('/pd')
   }
   
@@ -82,7 +80,7 @@ class Products extends Component {
     }
     
     return (
-      <div>
+      <>
         <ProductList page={page}
                      pageCount={pageCount}
                      currentPage={currentPage}
@@ -92,8 +90,7 @@ class Products extends Component {
                      sortingProducts={this.sortingProducts}
                      productDescription={this.productDescription}
         />
-  
-      </div>
+      </>
 
     )
   }

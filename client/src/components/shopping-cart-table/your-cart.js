@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Link} from "react-router-dom";
 import {removeCart} from "../localStorage/local-storage";
 
-export class YourCart extends Component {
+class YourCart extends Component {
   state = {
     cart: JSON.parse(localStorage.getItem('products')),
     summa: 0
@@ -24,7 +24,7 @@ export class YourCart extends Component {
     }
     return (
       
-      <div>
+      <>
         {/* Page Title*/}
         <div className="page-title-overlap bg-dark pt-4">
           <div
@@ -309,7 +309,9 @@ export class YourCart extends Component {
             </aside>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 }
+
+export default YourCart

@@ -22,45 +22,42 @@ class AccountAddress extends Component {
     edit: '',
     wishlist: JSON.parse(localStorage.getItem('wishlist')),
   }
+  
   closedModal = () => {
     this.setState({show: 'none'})
   }
+  
   addNewAddress = async (e) => {
     e.preventDefault()
-    const {
-      firstName, lastName, company, country, city,
-      postalCode, line1, line2, userId
-    } = this.state
-    await this.props.dispatch(userAction.address(userId.userId, {
-      firstName, lastName, company, country, city, line1, line2, postalCode
-    }, "addAddress"))
+    const { firstName, lastName, company, country, city,
+      postalCode, line1, line2, userId } = this.state
+    this.url = "address"
+    const body = { _id: userId.userId, url: this.url,
+      address: { firstName, lastName, company, country, city, line1, line2, postalCode },
+      action: "addAddress" }
+    await this.props.dispatch(userAction.myAccount(body, "update"))
     this.closedModal()
   }
   
   removeAddress = (e) => {
     e.preventDefault()
     let _id = e.currentTarget.value
-    this.props.dispatch(userAction.address(this.state.userId.userId, {_id}, "deleteAddress"))
+    const url = "address"
+    const body = {_id: this.state.userId.userId, url:url, address : {_id}, action: "deleteAddress"}
+    this.props.dispatch(userAction.myAccount(body, "update"))
   }
   
   handleInputChange = (event) => {
     const target = event.target
-    console.log(target.checked)
-    const value = target.type === 'checkbox' ? target.checked : target.value;
-    const name = target.name;
-    
-    this.setState({
-      
-      [name]: value
-    });
+    const value = target.type === 'checkbox' ? target.checked : target.value
+    const name = target.name
+    this.setState({[name]: value});
   }
   
   editAddress = (e) => {
-    console.log(e.currentTarget.value)
     const ed = this.state.address.filter(addres => addres._id === e.currentTarget.value)
     this.setState({show: 'block', edit: ed})
     this.setState({edit: ''})
-    
   }
   
   
@@ -71,7 +68,7 @@ class AccountAddress extends Component {
     } = this.state
     
     return (
-      <div>
+      <>
         <div className="page-title-overlap bg-dark pt-4">
           <div
             className="container d-lg-flex justify-content-between py-2 py-lg-3">
@@ -262,9 +259,7 @@ class AccountAddress extends Component {
                               data-toggle="tooltip"
                               title="Remove"
                               value={_id}
-                              onClick={(e) => {
-                                this.removeAddress(e)
-                              }}
+                              onClick={(e) => {this.removeAddress(e)}}
                             >
                               <div className="czi-trash"/>
                             </button>
@@ -474,7 +469,7 @@ class AccountAddress extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </>
     )
   }
 }
